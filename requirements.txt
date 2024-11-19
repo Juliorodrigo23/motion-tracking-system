@@ -1,0 +1,16 @@
+# Core dependencies
+numpy>=1.21.0
+opencv-python>=4.5.0
+mediapipe>=0.8.9
+
+# Filtering and mathematics
+filterpy>=1.4.5
+scipy>=1.7.0
+
+# GUI and visualization
+PySide6>=6.2.0
+matplotlib>=3.4.0
+
+# Additional utilities
+dataclasses>=0.8; python_version < "3.7"
+typing-extensions>=4.0.0; python_version < "3.8"

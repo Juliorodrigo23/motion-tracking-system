@@ -241,7 +241,15 @@ void ArmTracker::processJoints(
         const auto& landmark = poseLandmarks.landmark(index);
         
         JointState& joint = joints[jointName];
-        joint.position = Eigen::Vector3d(landmark.x(), landmark.y(), landmark.z());
+        Eigen::Vector3d measurement(landmark.x(), landmark.y(), landmark.z());
+        
+        // Apply Kalman filtering
+        joint.kalman->predict();
+        joint.kalman->update(measurement);
+        
+        // Use filtered position
+        joint.position = joint.kalman->getPosition();
+        joint.velocity = joint.kalman->getVelocity();
         joint.confidence = landmark.visibility();
     }
 }

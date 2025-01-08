@@ -25,10 +25,12 @@ public:
         Eigen::Vector3d velocity;    // Velocity for smoothing
         double confidence;           // Detection confidence
         cv::Point2i pixelPos;       // 2D screen position
-        
+        std::unique_ptr<JointKalmanFilter> kalman;
+    
         JointState() : confidence(0) {
             position = Eigen::Vector3d::Zero();
             velocity = Eigen::Vector3d::Zero();
+            kalman = std::make_unique<JointKalmanFilter>();
         }
     };
 

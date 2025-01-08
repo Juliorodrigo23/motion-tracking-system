@@ -9,8 +9,6 @@
                 "/opt/homebrew/Cellar/eigen/3.4.0_1/include/**",
                 "/opt/homebrew/Cellar/protobuf/29.2/include/**",
                 "${workspaceFolder}/mediapipe",
-                "${workspaceFolder}/mediapipe/bazel-mediapipe/external/com_google_protobuf/src",
-                "${workspaceFolder}/mediapipe/bazel-bin",
                 "${workspaceFolder}/include"
             ],
             "defines": [

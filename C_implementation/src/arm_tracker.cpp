@@ -1,4 +1,7 @@
+// Project headers
 #include "arm_tracker.hpp"
+
+// Third-party libraries
 #include <mediapipe/framework/calculator_framework.h>
 #include <mediapipe/framework/formats/landmark.pb.h>
 

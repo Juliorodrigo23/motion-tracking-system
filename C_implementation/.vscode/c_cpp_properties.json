@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/homebrew/include/**",
+                "/opt/homebrew/Cellar/opencv/4.10.0_18/include/**",
+                "/opt/homebrew/Cellar/eigen/3.4.0_1/include/**",
+                "/opt/homebrew/Cellar/protobuf/29.2/include/**",
+                "${workspaceFolder}/mediapipe/**",
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/**",
+                "${workspaceFolder}/include/**"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang++",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "/opt/homebrew/include",
+                    "/opt/homebrew/Cellar/opencv/4.10.0_18/include",
+                    "/opt/homebrew/Cellar/eigen/3.4.0_1/include",
+                    "/opt/homebrew/Cellar/protobuf/29.2/include",
+                    "${workspaceFolder}/mediapipe"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

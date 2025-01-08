@@ -1,12 +1,21 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
-#include <mediapipe/framework/formats/landmark.pb.h>
-#include <Eigen/Dense>
+// C++ Standard Library
 #include <string>
 #include <map>
 #include <deque>
 #include <memory>
+
+// Third-party libraries
+#include <Eigen/Dense>
+#include <opencv2/opencv.hpp>
+
+// Forward declarations for MediaPipe types
+namespace mediapipe {
+    class CalculatorGraph;
+    class OutputStreamPoller;
+    class NormalizedLandmarkList;
+}
 
 class ArmTracker {
 public:

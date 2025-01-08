@@ -9,8 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_TYPE Release)
 
-# Add MediaPipe
-add_subdirectory(mediapipe)
+# Add Homebrew prefix for M1 Mac
+list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
 
 # Find required packages
 find_package(OpenCV REQUIRED)
@@ -23,21 +23,20 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
     ${Protobuf_INCLUDE_DIRS}
+    /opt/homebrew/include
     ${CMAKE_CURRENT_SOURCE_DIR}/mediapipe
     ${CMAKE_CURRENT_BINARY_DIR}
-    /usr/local/include  # For Homebrew installed libraries
 )
 
 # Link directories
 link_directories(
-    /usr/local/lib  # For Homebrew installed libraries
+    /opt/homebrew/lib
 )
 
 # Source files
 set(SOURCES
     src/arm_tracker.cpp
     src/main.cpp
-    src/visualizer.cpp
 )
 
 # Add executable
@@ -48,7 +47,6 @@ target_link_libraries(arm_tracker
     PRIVATE
     ${OpenCV_LIBS}
     Eigen3::Eigen
-    mediapipe::framework
     ${Protobuf_LIBRARIES}
 )
 

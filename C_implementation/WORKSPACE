@@ -1,22 +1,64 @@
 workspace(name = "arm_tracker")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
+
+######################
+# Base Dependencies #
+######################
 
 # Rules for C++
 http_archive(
     name = "rules_cc",
     sha256 = "35f2fb4ea0b3e61ad64a369de284e4fbbdcdba71836a5555abb5e194cf119509",
     strip_prefix = "rules_cc-624b5d59dfb45672d4239422fa1e3de1822ee110",
-    urls = [
-        "https://github.com/bazelbuild/rules_cc/archive/624b5d59dfb45672d4239422fa1e3de1822ee110.tar.gz",
-    ],
+    urls = ["https://github.com/bazelbuild/rules_cc/archive/624b5d59dfb45672d4239422fa1e3de1822ee110.tar.gz"],
 )
 
 # Initialize rules_cc
 load("@rules_cc//cc:repositories.bzl", "rules_cc_dependencies")
 rules_cc_dependencies()
 
-# Eigen - using your local installation
+# Add bazel-skylib dependency
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94",
+    urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.5.0/bazel-skylib-1.5.0.tar.gz"],
+)
+
+load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
+bazel_skylib_workspace()
+
+######################
+# Protocol Buffers #
+######################
+
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "616bb3536ac1fff3fb1a141450fa28b875e985712170ea7f1bfe5e5fc41e2cd8",
+    strip_prefix = "protobuf-24.4",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v24.4.tar.gz"],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+protobuf_deps()
+
+######################
+# Abseil #
+######################
+
+http_archive(
+    name = "com_google_absl",
+    sha256 = "987ce98f02eefbaf930d6e38ab16aa05737234d7afbab2d5c4ea7adbe50c28ed",
+    strip_prefix = "abseil-cpp-20230802.1",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz"],
+)
+
+######################
+# Local Dependencies #
+######################
+
+# Eigen
 new_local_repository(
     name = "eigen",
     path = "/opt/homebrew/opt/eigen",
@@ -54,8 +96,8 @@ cc_library(
 """
 )
 
-# MediaPipe as a subdirectory
-bind(
+# Local MediaPipe
+local_repository(
     name = "mediapipe",
-    actual = "//mediapipe",
+    path = "mediapipe",
 )

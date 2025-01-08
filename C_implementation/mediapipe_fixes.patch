@@ -1,0 +1,23 @@
+diff --git a/mediapipe/framework/BUILD b/mediapipe/framework/BUILD
+index a123b456..b789c123 100644
+--- a/mediapipe/framework/BUILD
++++ b/mediapipe/framework/BUILD
+@@ -8,7 +8,6 @@ package(default_visibility = ["//visibility:public"])
+ cc_library(
+     name = "calculator_framework",
+     hdrs = ["calculator_framework.h"],
+-    deps = ["@com_google_absl//absl/status"],
+     visibility = ["//visibility:public"],
+ )
+ 
+diff --git a/mediapipe/framework/formats/BUILD b/mediapipe/framework/formats/BUILD
+index d123e789..f456g123 100644
+--- a/mediapipe/framework/formats/BUILD
++++ b/mediapipe/framework/formats/BUILD
+@@ -5,7 +5,6 @@ package(default_visibility = ["//visibility:public"])
+ cc_library(
+     name = "landmark_cc_proto",
+     hdrs = ["landmark.pb.h"],
+-    deps = ["@com_google_protobuf//:protobuf"],
+     visibility = ["//visibility:public"],
+ )

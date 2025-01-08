@@ -12,13 +12,17 @@ cc_library(
     deps = [
         "@opencv//:opencv",
         "@eigen//:eigen",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings",
+        "@com_google_protobuf//:protobuf",
         "@mediapipe//mediapipe/framework:calculator_framework",
-        "@mediapipe//mediapipe/framework/formats:landmark_cc_proto",
+        "@mediapipe//mediapipe/framework/formats:landmark",
     ],
     copts = [
         "-std=c++17",
         "-I$(GENDIR)",
-        "-Iexternal/mediapipe",
+        "-I.",
+        "-Imediapipe",
     ],
     visibility = ["//visibility:public"],
 )

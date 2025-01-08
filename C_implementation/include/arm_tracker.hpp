@@ -10,7 +10,8 @@
 #include "kalman_filter.hpp"
 
 // Third-party libraries
-#include <Eigen/Dense>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <opencv2/opencv.hpp>
 
 // Forward declarations for MediaPipe types

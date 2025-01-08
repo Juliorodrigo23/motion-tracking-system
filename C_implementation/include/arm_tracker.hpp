@@ -74,16 +74,16 @@ public:
 private:
     // Gesture recognition
     GestureState detectRotationGesture(const std::string& side,
-                                      const HandState& hand,
-                                      const std::map<std::string, JointState>& joints);
+                                    const HandState& hand,
+                                    const std::map<std::string, JointState>& joints);
     
     // Hand processing
     HandState processHandLandmarks(const mediapipe::NormalizedLandmarkList& landmarks, 
-                                 const std::string& side);
+                                const std::string& side);
     
     // Joint processing
     void processJoints(const mediapipe::NormalizedLandmarkList& poseLandmarks,
-                      std::map<std::string, JointState>& joints);
+                    std::map<std::string, JointState>& joints);
 
     // Utility functions
     Eigen::Vector3d calculatePalmNormal(const HandState& hand);

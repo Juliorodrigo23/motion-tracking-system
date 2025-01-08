@@ -17,8 +17,8 @@ private:
     cv::Point toPixel(const Eigen::Vector3d& pos);
     void drawHand(cv::Mat& frame, const ArmTracker::HandState& hand, const cv::Scalar& color);
     void drawRotationInfo(cv::Mat& frame, const ArmTracker::GestureState& gesture,
-                         const cv::Point& pos, const cv::Scalar& color,
-                         const std::string& side);
+                        const cv::Point& pos, const cv::Scalar& color,
+                        const std::string& side);
     
     int frameWidth;
     int frameHeight;

@@ -1,0 +1,17 @@
+workspace(name = "arm_tracker")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
+
+# MediaPipe
+local_repository(
+    name = "mediapipe",
+    path = "mediapipe",
+)
+
+# OpenCV
+new_local_repository(
+    name = "opencv",
+    build_file = "@mediapipe//third_party:opencv_macos.BUILD",
+    path = "/opt/homebrew/opt/opencv",
+)

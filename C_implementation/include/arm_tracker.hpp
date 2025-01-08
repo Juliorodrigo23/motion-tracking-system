@@ -6,6 +6,9 @@
 #include <deque>
 #include <memory>
 
+// built by me
+#include "kalman_filter.hpp"
+
 // Third-party libraries
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>

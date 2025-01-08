@@ -1,0 +1,33 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+cc_library(
+    name = "arm_tracker_lib",
+    srcs = ["src/arm_tracker.cpp"],
+    hdrs = [
+        "include/arm_tracker.hpp",
+        "include/kalman_filter.hpp",
+        "include/visualizer.hpp",
+    ],
+    includes = ["include"],
+    deps = [
+        "@opencv//:opencv",
+        "@eigen//:eigen",
+        "@mediapipe//mediapipe/framework:calculator_framework",
+        "@mediapipe//mediapipe/framework/formats:landmark_cc_proto",
+    ],
+    copts = [
+        "-std=c++17",
+        "-I$(GENDIR)",
+        "-Iexternal/mediapipe",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "arm_tracker",
+    srcs = ["src/main.cpp"],
+    deps = [
+        ":arm_tracker_lib",
+    ],
+    copts = ["-std=c++17"],
+)

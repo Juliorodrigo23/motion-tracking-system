@@ -1,29 +1,61 @@
 workspace(name = "arm_tracker")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
-load("@bazel_tools//tools/build_defs/repo:local.bzl", "local_repository", "new_local_repository")
 
-# MediaPipe
-local_repository(
-    name = "mediapipe",
-    path = "mediapipe",
+# Rules for C++
+http_archive(
+    name = "rules_cc",
+    sha256 = "35f2fb4ea0b3e61ad64a369de284e4fbbdcdba71836a5555abb5e194cf119509",
+    strip_prefix = "rules_cc-624b5d59dfb45672d4239422fa1e3de1822ee110",
+    urls = [
+        "https://github.com/bazelbuild/rules_cc/archive/624b5d59dfb45672d4239422fa1e3de1822ee110.tar.gz",
+    ],
+)
+
+# Initialize rules_cc
+load("@rules_cc//cc:repositories.bzl", "rules_cc_dependencies")
+rules_cc_dependencies()
+
+# Eigen - using your local installation
+new_local_repository(
+    name = "eigen",
+    path = "/opt/homebrew/opt/eigen",
+    build_file_content = """
+cc_library(
+    name = "eigen",
+    includes = ["include/eigen3"],
+    hdrs = glob(["include/eigen3/**"]),
+    visibility = ["//visibility:public"],
+)
+"""
 )
 
 # OpenCV
 new_local_repository(
     name = "opencv",
-    build_file = "@mediapipe//third_party:opencv_macos.BUILD",
     path = "/opt/homebrew/opt/opencv",
+    build_file_content = """
+cc_library(
+    name = "opencv",
+    srcs = glob(["lib/*.dylib"]),
+    hdrs = glob(["include/opencv4/**/*.h*"]),
+    includes = ["include/opencv4"],
+    visibility = ["//visibility:public"],
+    linkopts = [
+        "-L/opt/homebrew/opt/opencv/lib",
+        "-lopencv_core",
+        "-lopencv_highgui",
+        "-lopencv_imgcodecs",
+        "-lopencv_imgproc",
+        "-lopencv_video",
+        "-lopencv_videoio",
+    ],
+)
+"""
 )
 
-# Load MediaPipe dependencies
-load("@mediapipe//WORKSPACE.bazel", "mediapipe_dependencies")
-mediapipe_dependencies()
-
-# Load Bazel rules
-http_archive(
-    name = "rules_cc",
-    urls = ["https://github.com/bazelbuild/rules_cc/releases/download/0.0.9/rules_cc-0.0.9.tar.gz"],
-    sha256 = "2037875b9a4456dce4a79d112a8ae885bbc4aad968e6587dca6e64f3a0900cdf",
+# MediaPipe as a subdirectory
+bind(
+    name = "mediapipe",
+    actual = "//mediapipe",
 )

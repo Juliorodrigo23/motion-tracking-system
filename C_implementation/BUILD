@@ -1,3 +1,5 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
 cc_binary(
     name = "arm_tracker",
     srcs = [
@@ -15,4 +17,5 @@ cc_binary(
         "@opencv//:opencv",
     ],
     includes = ["include"],
+    copts = ["-std=c++17"],
 )

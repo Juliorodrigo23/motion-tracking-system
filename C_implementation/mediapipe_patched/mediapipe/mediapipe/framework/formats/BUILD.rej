@@ -1,0 +1,9 @@
+@@ -5,7 +5,6 @@
+ cc_library(
+     name = "landmark_cc_proto",
+     hdrs = ["landmark.pb.h"],
+-    deps = ["@com_google_protobuf//:protobuf"],
+     visibility = ["//visibility:public"],
+ )
+\ No newline at end of line
+ 

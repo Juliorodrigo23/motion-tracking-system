@@ -1,7 +1,6 @@
 #include "arm_tracker.hpp"
-#include "visualizer.hpp"
+#include "ui_wrapper.hpp"
 #include <opencv2/opencv.hpp>
-#include <iostream>
 
 int main() {
     cv::VideoCapture cap(0);
@@ -13,31 +12,63 @@ int main() {
     int frameWidth = cap.get(cv::CAP_PROP_FRAME_WIDTH);
     int frameHeight = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     
+    // Create instances
     ArmTracker tracker;
-    if (!tracker.initialize()) {
-        std::cerr << "Error: Could not initialize MediaPipe" << std::endl;
-        return -1;
-    }
-
-    TrackerVisualizer visualizer(frameWidth, frameHeight);
+    UIWrapper ui(frameWidth, frameHeight);
     
-    cv::Mat frame, displayFrame;
+    cv::Mat frame;
     while (true) {
         cap >> frame;
         if (frame.empty()) break;
         
-        frame.copyTo(displayFrame);
+        // Get mouse state
+        cv::Point mouse = cv::getWindowPoint("Tracking");
+        int mouseFlags = cv::getWindowProperty("Tracking", cv::WND_PROP_MOUSE_CALLBACK);
+        bool mouseDown = (mouseFlags & cv::EVENT_FLAG_LBUTTON) != 0;
         
+        // Process frame with arm tracker
         ArmTracker::TrackingResult result;
         tracker.processFrame(frame, result);
         
-        if (!result.trackingLost) {
-            visualizer.drawOverlay(displayFrame, result);
+        // Update UI
+        ui.update(result, frame, 
+                 static_cast<float>(mouse.x), 
+                 static_cast<float>(mouse.y), 
+                 mouseDown);
+        
+        // Render UI
+        const auto& commands = ui.getRenderCommands();
+        cv::Mat display = frame.clone();
+        
+        for (int i = 0; i < commands.length; i++) {
+            const Clay_RenderCommand* cmd = &commands.internalArray[i];
+            
+            switch (cmd->commandType) {
+                case CLAY_RENDER_COMMAND_TYPE_RECTANGLE: {
+                    const auto& rect = cmd->boundingBox;
+                    const auto& color = cmd->config.rectangleElementConfig->color;
+                    cv::rectangle(display,
+                                cv::Rect(rect.x, rect.y, rect.width, rect.height),
+                                cv::Scalar(color.b, color.g, color.r, color.a),
+                                cv::FILLED);
+                    break;
+                }
+                case CLAY_RENDER_COMMAND_TYPE_TEXT: {
+                    const auto& text = cmd->config.textElementConfig->text;
+                    const auto& color = cmd->config.textElementConfig->textColor;
+                    cv::putText(display,
+                              std::string(text.chars, text.length),
+                              cv::Point(cmd->boundingBox.x, 
+                                      cmd->boundingBox.y + cmd->boundingBox.height),
+                              cv::FONT_HERSHEY_SIMPLEX,
+                              cmd->config.textElementConfig->fontSize / 24.0,
+                              cv::Scalar(color.b, color.g, color.r, color.a));
+                    break;
+                }
+            }
         }
         
-        // Show both original and tracked views
-        cv::imshow("Original", frame);
-        cv::imshow("Tracking", displayFrame);
+        cv::imshow("Tracking", display);
         
         int key = cv::waitKey(1);
         if (key == 27) break;  // ESC to exit

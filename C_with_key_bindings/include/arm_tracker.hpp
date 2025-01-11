@@ -8,19 +8,16 @@
 
 // built by me
 #include "kalman_filter.hpp"
+#include "mediapipe_wrapper.hpp"  // Add this include for MediaPipeWrapper
 
 // Third-party libraries
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <opencv2/opencv.hpp>
 
-// MediaPipe includes
-#include <mediapipe/framework/calculator_framework.h>
-#include <mediapipe/framework/formats/landmark.pb.h>
-
 class ArmTracker {
 public:
-    // Your existing structs remain the same
+    // Structs should be declared before they're used
     struct GestureState {
         std::string type;  // "pronation" or "supination"
         double confidence;
@@ -62,27 +59,45 @@ public:
         TrackingResult() : trackingLost(true) {}
     };
 
+    // Public methods
     ArmTracker();
     ~ArmTracker();
 
-    bool initialize();  // New method to initialize MediaPipe
+    // Main processing method
     void processFrame(const cv::Mat& frame, TrackingResult& result);
+    
     void toggleArm(const std::string& side);
     void toggleFingers(const std::string& side);
 
 private:
+    // MediaPipe wrapper
+    std::unique_ptr<MediaPipeWrapper> mp_wrapper;
+
+    // Processing method for landmarks
+    void processFrameWithLandmarks(
+        const cv::Mat& frame,
+        const Eigen::MatrixXd& pose_landmarks,  // Nx4 matrix (x,y,z,visibility)
+        const std::vector<Eigen::MatrixXd>& hand_landmarks,  // Vector of Nx3 matrices (x,y,z)
+        TrackingResult& result
+    );
+
     // Gesture recognition
-    GestureState detectRotationGesture(const std::string& side,
-                                    const HandState& hand,
-                                    const std::map<std::string, JointState>& joints);
+    GestureState detectRotationGesture(
+        const std::string& side,
+        const HandState& hand,
+        const std::map<std::string, JointState>& joints
+    );
     
-    // Hand processing
-    HandState processHandLandmarks(const mediapipe::NormalizedLandmarkList& landmarks, 
-                                const std::string& side);
+    // Processing methods for landmarks
+    HandState processHandLandmarks(
+        const Eigen::MatrixXd& landmarks,
+        const std::string& side
+    );
     
-    // Joint processing
-    void processJoints(const mediapipe::NormalizedLandmarkList& poseLandmarks,
-                    std::map<std::string, JointState>& joints);
+    void processPoseLandmarks(
+        const Eigen::MatrixXd& landmarks,
+        std::map<std::string, JointState>& joints
+    );
 
     // Utility functions
     Eigen::Vector3d calculatePalmNormal(const HandState& hand);
@@ -93,17 +108,9 @@ private:
     std::map<std::string, bool> activeFingers;
     std::map<std::string, std::deque<Eigen::Vector3d>> palmHistory;
     std::map<std::string, std::deque<double>> rotationHistory;
-    
-    // MediaPipe members
-    mediapipe::CalculatorGraph graph_;
-    std::unique_ptr<mediapipe::OutputStreamPoller> posePoller_;
-    std::unique_ptr<mediapipe::OutputStreamPoller> handPoller_;
 
     // Constants
     static constexpr int HISTORY_SIZE = 10;
     static constexpr double CONFIDENCE_THRESHOLD = 0.6;
     static constexpr double GESTURE_ANGLE_THRESHOLD = 2.8; // radians
-    static constexpr char kInputStream[] = "input_video";
-    static constexpr char kPoseOutputStream[] = "pose_landmarks";
-    static constexpr char kHandOutputStream[] = "hand_landmarks";
 };

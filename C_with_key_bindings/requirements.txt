@@ -1,22 +1,4 @@
-pybind11>=2.6.0
+mediapipe>=0.10.0
 numpy>=1.19.0
-
-# python/arm_tracker/bindings.cpp
-#include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
-#include "arm_tracker.hpp"
-
-namespace py = pybind11;
-
-PYBIND11_MODULE(arm_tracker_python, m) {
-    py::class_<ArmTracker>(m, "ArmTracker")
-        .def(py::init<>())
-        .def("track", &ArmTracker::track)
-        // Add other methods you want to expose
-        ;
-}
-
-# python/arm_tracker/__init__.py
-from .arm_tracker_python import ArmTracker
-
-__all__ = ['ArmTracker']
+pybind11>=2.6.0
+opencv-python>=4.5.0

@@ -1,23 +1,18 @@
+// arm_tracker.hpp
 #pragma once
 
-// C++ Standard Library
 #include <string>
 #include <map>
 #include <deque>
 #include <memory>
-
-// built by me
 #include "kalman_filter.hpp"
-#include "mediapipe_wrapper.hpp"  // Add this include for MediaPipeWrapper
-
-// Third-party libraries
+#include "mediapipe_wrapper.hpp"
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <opencv2/opencv.hpp>
 
 class ArmTracker {
 public:
-    // Structs should be declared before they're used
     struct GestureState {
         std::string type;  // "pronation" or "supination"
         double confidence;
@@ -59,45 +54,33 @@ public:
         TrackingResult() : trackingLost(true) {}
     };
 
-    // Public methods
     ArmTracker();
     ~ArmTracker();
 
-    // Main processing method
-    void processFrame(const cv::Mat& frame, TrackingResult& result);
-    
+    bool processFrame(const cv::Mat& frame, TrackingResult& result, cv::Mat& debug_output);
     void toggleArm(const std::string& side);
     void toggleFingers(const std::string& side);
 
 private:
-    // MediaPipe wrapper
     std::unique_ptr<MediaPipeWrapper> mp_wrapper;
 
-    // Processing method for landmarks
-    void processFrameWithLandmarks(
-        const cv::Mat& frame,
-        const Eigen::MatrixXd& pose_landmarks,  // Nx4 matrix (x,y,z,visibility)
-        const std::vector<Eigen::MatrixXd>& hand_landmarks,  // Vector of Nx3 matrices (x,y,z)
-        TrackingResult& result
-    );
+    // Processing methods
+    void processFrameWithLandmarks(const cv::Mat& frame,
+                                 const Eigen::MatrixXd& pose_landmarks,
+                                 const std::vector<Eigen::MatrixXd>& hand_landmarks,
+                                 TrackingResult& result);
 
     // Gesture recognition
-    GestureState detectRotationGesture(
-        const std::string& side,
-        const HandState& hand,
-        const std::map<std::string, JointState>& joints
-    );
+    GestureState detectRotationGesture(const std::string& side,
+                                     const HandState& hand,
+                                     const std::map<std::string, JointState>& joints);
     
     // Processing methods for landmarks
-    HandState processHandLandmarks(
-        const Eigen::MatrixXd& landmarks,
-        const std::string& side
-    );
+    HandState processHandLandmarks(const Eigen::MatrixXd& landmarks,
+                                 const std::string& side);
     
-    void processPoseLandmarks(
-        const Eigen::MatrixXd& landmarks,
-        std::map<std::string, JointState>& joints
-    );
+    void processPoseLandmarks(const Eigen::MatrixXd& landmarks,
+                            std::map<std::string, JointState>& joints);
 
     // Utility functions
     Eigen::Vector3d calculatePalmNormal(const HandState& hand);

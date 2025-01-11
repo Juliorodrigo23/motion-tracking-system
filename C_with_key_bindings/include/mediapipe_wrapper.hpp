@@ -17,16 +17,29 @@ public:
                 py::initialize_interpreter();
             }
 
-            // Draw utils will be needed for visualization
             py::exec(R"(
                 import mediapipe as mp
                 import numpy as np
+                import cv2  # Added cv2 import
 
-                # Initialize MediaPipe drawing utils
                 mp_drawing = mp.solutions.drawing_utils
                 mp_drawing_styles = mp.solutions.drawing_styles
                 mp_pose = mp.solutions.pose
                 mp_hands = mp.solutions.hands
+
+                # Custom connections to exclude face
+                BODY_CONNECTIONS = frozenset([
+                    # Torso
+                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.RIGHT_SHOULDER),
+                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_HIP),
+                    (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP),
+                    (mp_pose.PoseLandmark.LEFT_HIP, mp_pose.PoseLandmark.RIGHT_HIP),
+                    # Arms
+                    (mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW),
+                    (mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW),
+                    (mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST),
+                    (mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST),
+                ])
 
                 # Initialize detectors
                 pose = mp_pose.Pose(
@@ -41,28 +54,39 @@ public:
                     max_num_hands=2
                 )
 
-                def draw_landmarks(image, results):
-                    # Draw pose landmarks
+                def draw_landmarks_no_face(image, results):
+                    annotated_image = image.copy()
+                    
+                    # Draw pose landmarks (excluding face)
                     if results['pose_landmarks']:
-                        mp_drawing.draw_landmarks(
-                            image,
-                            results['pose_landmarks'],
-                            mp_pose.POSE_CONNECTIONS,
-                            landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style()
-                        )
+                        # Draw custom connections (body only)
+                        for connection in BODY_CONNECTIONS:
+                            start_idx = connection[0].value
+                            end_idx = connection[1].value
+                            
+                            start_landmark = results['pose_landmarks'].landmark[start_idx]
+                            end_landmark = results['pose_landmarks'].landmark[end_idx]
+                            
+                            image_height, image_width = image.shape[:2]
+                            start_point = (int(start_landmark.x * image_width), int(start_landmark.y * image_height))
+                            end_point = (int(end_landmark.x * image_width), int(end_landmark.y * image_height))
+                            
+                            cv2.line(annotated_image, start_point, end_point, (0, 255, 0), 2)
+                            cv2.circle(annotated_image, start_point, 4, (0, 0, 255), -1)
+                            cv2.circle(annotated_image, end_point, 4, (0, 0, 255), -1)
                     
                     # Draw hand landmarks
                     if results['hand_landmarks']:
                         for hand_landmarks in results['hand_landmarks']:
                             mp_drawing.draw_landmarks(
-                                image,
+                                annotated_image,
                                 hand_landmarks,
                                 mp_hands.HAND_CONNECTIONS,
                                 mp_drawing_styles.get_default_hand_landmarks_style(),
                                 mp_drawing_styles.get_default_hand_connections_style()
                             )
                     
-                    return image
+                    return annotated_image
             )");
 
             std::cout << "Successfully initialized MediaPipe detectors" << std::endl;
@@ -84,7 +108,8 @@ public:
     
     bool process_frame(const cv::Mat& frame,
                       Eigen::MatrixXd& pose_landmarks,
-                      std::vector<Eigen::MatrixXd>& hand_landmarks) {
+                      std::vector<Eigen::MatrixXd>& hand_landmarks,
+                      cv::Mat& debug_output) {
         try {
             // Convert BGR to RGB
             cv::Mat rgb_frame;
@@ -97,31 +122,29 @@ public:
                 rgb_frame.data
             );
 
-            // Process with MediaPipe
+            // Create the Python dictionary for the locals
             py::dict locals;
             locals["image_array"] = py_image;
 
+            // Process with MediaPipe
             py::exec(R"(
                 # Process frame
                 pose_results = pose.process(image_array)
                 hand_results = hands.process(image_array)
 
-                # Convert results for debugging visualization
                 results = {
                     'pose_landmarks': pose_results.pose_landmarks,
                     'hand_landmarks': hand_results.multi_hand_landmarks
                 }
 
-                # Draw landmarks on debug image
-                debug_image = image_array.copy()
-                debug_image = draw_landmarks(debug_image, results)
+                # Draw landmarks
+                debug_image = draw_landmarks_no_face(image_array, results)
 
                 # Get pose landmarks
                 pose_landmarks_data = []
                 if pose_results.pose_landmarks:
                     for landmark in pose_results.pose_landmarks.landmark:
                         pose_landmarks_data.append([landmark.x, landmark.y, landmark.z, landmark.visibility])
-                    print(f"Found {len(pose_landmarks_data)} pose landmarks")
 
                 # Get hand landmarks
                 hand_landmarks_data = []
@@ -131,20 +154,18 @@ public:
                         for landmark in hand_landmarks.landmark:
                             hand_data.append([landmark.x, landmark.y, landmark.z])
                         hand_landmarks_data.append(hand_data)
-                    print(f"Found {len(hand_landmarks_data)} hands")
             )", py::globals(), locals);
 
-            // Get debug image and display it
+            // Get debug image
             py::array_t<unsigned char> debug_image = locals["debug_image"].cast<py::array_t<unsigned char>>();
             cv::Mat debug_mat(debug_image.shape(0), debug_image.shape(1), CV_8UC3, debug_image.mutable_data());
-            cv::cvtColor(debug_mat, debug_mat, cv::COLOR_RGB2BGR);
-            cv::imshow("MediaPipe Debug", debug_mat);
+            cv::cvtColor(debug_mat, debug_output, cv::COLOR_RGB2BGR);
 
             // Get landmarks
             auto py_pose_landmarks = locals["pose_landmarks_data"].cast<py::list>();
             auto py_hand_landmarks = locals["hand_landmarks_data"].cast<py::list>();
 
-            // Convert pose landmarks to Eigen matrix
+            // Convert pose landmarks
             if (py::len(py_pose_landmarks) > 0) {
                 pose_landmarks.resize(py::len(py_pose_landmarks), 4);
                 for (size_t i = 0; i < py::len(py_pose_landmarks); ++i) {
@@ -158,7 +179,7 @@ public:
                 return false;
             }
 
-            // Convert hand landmarks to vector of Eigen matrices
+            // Convert hand landmarks
             hand_landmarks.clear();
             for (auto hand_data : py_hand_landmarks) {
                 auto hand_landmarks_list = hand_data.cast<py::list>();

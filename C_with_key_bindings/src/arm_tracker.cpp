@@ -19,14 +19,16 @@ ArmTracker::ArmTracker() {
 
 ArmTracker::~ArmTracker() = default;
 
-void ArmTracker::processFrame(const cv::Mat& frame, TrackingResult& result) {
+bool ArmTracker::processFrame(const cv::Mat& frame, TrackingResult& result, cv::Mat& debug_output) {
     Eigen::MatrixXd pose_landmarks;
     std::vector<Eigen::MatrixXd> hand_landmarks;
     
-    if (mp_wrapper->process_frame(frame, pose_landmarks, hand_landmarks)) {
+    if (mp_wrapper->process_frame(frame, pose_landmarks, hand_landmarks, debug_output)) {
         processFrameWithLandmarks(frame, pose_landmarks, hand_landmarks, result);
+        return true;
     } else {
         result.trackingLost = true;
+        return false;
     }
 }
 

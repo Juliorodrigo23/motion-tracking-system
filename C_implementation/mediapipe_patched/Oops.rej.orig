@@ -1,8 +1,0 @@
-@@ -8,7 +8,6 @@
- cc_library(
-     name = "calculator_framework",
-     hdrs = ["calculator_framework.h"],
--    deps = ["@com_google_absl//absl/status"],
-     visibility = ["//visibility:public"],
- )
- 

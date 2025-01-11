@@ -7,7 +7,6 @@ build --apple_platform_type=macos
 build --macos_minimum_os=13.0
 build --cxxopt=-std=c++17
 build --host_cxxopt=-std=c++17
-build --define MEDIAPIPE_DISABLE_GPU=1
 
 # M3 Mac specific
 build:macos --cpu=darwin_arm64

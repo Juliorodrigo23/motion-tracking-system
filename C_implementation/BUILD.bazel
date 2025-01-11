@@ -1,6 +1,5 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
-# Library for arm tracker
 cc_library(
     name = "arm_tracker_lib",
     srcs = ["src/arm_tracker.cpp"],
@@ -13,22 +12,17 @@ cc_library(
     deps = [
         "@opencv//:opencv",
         "@eigen//:eigen",
-        "@com_google_absl//absl/status",
-        "@com_google_absl//absl/strings",
-        "@com_google_protobuf//:protobuf",
-        "@mediapipe_patched//mediapipe/framework:calculator_framework",
-        "@mediapipe_patched//mediapipe/framework/formats:landmark",
+        "@mediapipe//mediapipe/framework:calculator_framework",
+        "@mediapipe//mediapipe/framework/formats:landmark",
     ],
     copts = [
         "-std=c++17",
         "-I$(GENDIR)",
         "-I.",
-        "-Imediapipe",
     ],
     visibility = ["//visibility:public"],
 )
 
-# Binary target for arm tracker
 cc_binary(
     name = "arm_tracker",
     srcs = ["src/main.cpp"],
@@ -36,30 +30,4 @@ cc_binary(
         ":arm_tracker_lib",
     ],
     copts = ["-std=c++17"],
-)
-
-genrule(
-    name = "apply_mediapipe_patch",
-    srcs = ["mediapipe_fixes.patch"],
-    outs = ["mediapipe_patched.tar.gz"],
-    cmd = """
-    PATCH_FILE="$$(pwd)/$(location mediapipe_fixes.patch)" && \
-    WORK_DIR="$$(pwd)" && \
-    echo "Working directory: $$WORK_DIR" && \
-    echo "Patch file: $$PATCH_FILE" && \
-    mkdir -p "$$WORK_DIR/mediapipe_temp/framework/formats" && \
-    echo "Copying files..." && \
-    cp -r mediapipe/mediapipe/* "$$WORK_DIR/mediapipe_temp/" && \
-    echo "Directory structure:" && \
-    find "$$WORK_DIR/mediapipe_temp" -type f && \
-    cd "$$WORK_DIR/mediapipe_temp" && \
-    echo "Contents of patch file:" && \
-    cat "$$PATCH_FILE" && \
-    echo "Applying patch..." && \
-    patch -p1 --verbose < "$$PATCH_FILE" && \
-    cd "$$WORK_DIR" && \
-    tar -czf "$(location mediapipe_patched.tar.gz)" mediapipe_temp/ && \
-    rm -rf "$$WORK_DIR/mediapipe_temp"
-    """,
-    tools = ["mediapipe"],
 )

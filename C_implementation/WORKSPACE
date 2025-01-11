@@ -1,25 +1,8 @@
 workspace(name = "arm_tracker")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 
-######################
-# Base Dependencies #
-######################
-
-# Rules for C++
-http_archive(
-    name = "rules_cc",
-    sha256 = "35f2fb4ea0b3e61ad64a369de284e4fbbdcdba71836a5555abb5e194cf119509",
-    strip_prefix = "rules_cc-624b5d59dfb45672d4239422fa1e3de1822ee110",
-    urls = ["https://github.com/bazelbuild/rules_cc/archive/624b5d59dfb45672d4239422fa1e3de1822ee110.tar.gz"],
-)
-
-# Initialize rules_cc
-load("@rules_cc//cc:repositories.bzl", "rules_cc_dependencies")
-rules_cc_dependencies()
-
-# Add bazel-skylib dependency
+# Bazel Skylib
 http_archive(
     name = "bazel_skylib",
     sha256 = "cd55a062e763b9349921f0f5db8c3933288dc8ba4f76dd9416aac68acee3cb94",
@@ -29,10 +12,70 @@ http_archive(
 load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 
-######################
-# Protocol Buffers #
-######################
+# Node.js rules
+http_archive(
+    name = "build_bazel_rules_nodejs",
+    sha256 = "94070eff79305be05b7699207fbac5d2608054dd53e6109f7d00d923919ff45a",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.2/rules_nodejs-5.8.2.tar.gz"],
+)
 
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+build_bazel_rules_nodejs_dependencies()
+
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
+node_repositories()
+npm_install(
+    name = "npm",
+    package_json = "@mediapipe//:package.json",
+    package_lock_json = "@mediapipe//:package-lock.json",
+)
+
+# Rules for C++
+http_archive(
+    name = "rules_cc",
+    sha256 = "35f2fb4ea0b3e61ad64a369de284e4fbbdcdba71836a5555abb5e194cf119509",
+    strip_prefix = "rules_cc-624b5d59dfb45672d4239422fa1e3de1822ee110",
+    urls = ["https://github.com/bazelbuild/rules_cc/archive/624b5d59dfb45672d4239422fa1e3de1822ee110.tar.gz"],
+)
+
+# Proto rules
+http_archive(
+    name = "rules_proto_grpc",
+    sha256 = "fb7fc7a3c19a92b2f15ed7c4ffb2983e956625c1436f57a3430b897ba9864059",
+    strip_prefix = "rules_proto_grpc-4.3.0",
+    urls = ["https://github.com/rules-proto-grpc/rules_proto_grpc/archive/4.3.0.tar.gz"],
+)
+
+load("@rules_proto_grpc//:repositories.bzl", "rules_proto_grpc_repos", "rules_proto_grpc_toolchains")
+rules_proto_grpc_toolchains()
+rules_proto_grpc_repos()
+
+
+# Tensor flow
+http_archive(
+    name = "org_tensorflow",
+    urls = ["https://github.com/tensorflow/tensorflow/archive/v2.13.0.tar.gz"],
+    strip_prefix = "tensorflow-2.13.0",
+    sha256 = "095f495ef2c11639f99d3306d795099a9a42537b9c639dd58f5ab88d43298938",
+)
+
+# MediaPipe
+http_archive(
+    name = "mediapipe",
+    sha256 = "030d069da7108f67496c9e2d151c4ccab47552fabe8f0d6ef3b03de77a5a13b7",
+    strip_prefix = "mediapipe-0.10.10",
+    urls = ["https://github.com/google/mediapipe/archive/v0.10.10.tar.gz"],
+)
+
+# Abseil (required by MediaPipe)
+http_archive(
+    name = "com_google_absl",
+    sha256 = "987ce98f02eefbaf930d6e38ab16aa05737234d7afbab2d5c4ea7adbe50c28ed",
+    strip_prefix = "abseil-cpp-20230802.1",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz"],
+)
+
+# Protocol Buffers (required by MediaPipe)
 http_archive(
     name = "com_google_protobuf",
     sha256 = "616bb3536ac1fff3fb1a141450fa28b875e985712170ea7f1bfe5e5fc41e2cd8",
@@ -43,36 +86,7 @@ http_archive(
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
 
-######################
-# Abseil #
-######################
-
-http_archive(
-    name = "com_google_absl",
-    sha256 = "987ce98f02eefbaf930d6e38ab16aa05737234d7afbab2d5c4ea7adbe50c28ed",
-    strip_prefix = "abseil-cpp-20230802.1",
-    urls = ["https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz"],
-)
-
-######################
-# Local Dependencies #
-######################
-
-# Eigen
-new_local_repository(
-    name = "eigen",
-    path = "/opt/homebrew/opt/eigen",
-    build_file_content = """
-cc_library(
-    name = "eigen",
-    includes = ["include/eigen3"],
-    hdrs = glob(["include/eigen3/**"]),
-    visibility = ["//visibility:public"],
-)
-"""
-)
-
-# OpenCV
+# OpenCV (from Homebrew)
 new_local_repository(
     name = "opencv",
     path = "/opt/homebrew/opt/opencv",
@@ -96,20 +110,16 @@ cc_library(
 """
 )
 
-local_repository(
-    name = "mediapipe_patched",
-    path = "bazel-bin/mediapipe_patched",
+# Eigen (from Homebrew)
+new_local_repository(
+    name = "eigen",
+    path = "/opt/homebrew/opt/eigen",
+    build_file_content = """
+cc_library(
+    name = "eigen",
+    includes = ["include/eigen3"],
+    hdrs = glob(["include/eigen3/**"]),
+    visibility = ["//visibility:public"],
 )
-
-http_archive(
-    name = "rules_proto_grpc",
-    urls = ["https://github.com/rules-proto-grpc/rules_proto_grpc/releases/download/4.6.0/rules_proto_grpc-4.6.0.tar.gz"],
-    strip_prefix = "rules_proto_grpc-4.6.0",
-    sha256 = "2a0860a336ae836b54671cbbe0710eec17c64ef70c4c5a88ccfd47ea6e3739bd",  # Replace with the actual SHA256 hash
+"""
 )
-
-
-# Load rules_proto_grpc
-load("@rules_proto_grpc//:repositories.bzl", "rules_proto_grpc_toolchains", "rules_proto_grpc_repos")
-rules_proto_grpc_toolchains()
-rules_proto_grpc_repos()

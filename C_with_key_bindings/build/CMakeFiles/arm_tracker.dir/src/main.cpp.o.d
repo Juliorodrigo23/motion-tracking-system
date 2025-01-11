@@ -1515,4 +1515,8 @@ CMakeFiles/arm_tracker.dir/src/main.cpp.o: \
   /opt/homebrew/Cellar/opencv/4.11.0/include/opencv4/opencv2/stitching/detail/blenders.hpp \
   /opt/homebrew/Cellar/opencv/4.11.0/include/opencv4/opencv2/video.hpp \
   /opt/homebrew/Cellar/opencv/4.11.0/include/opencv4/opencv2/video/tracking.hpp \
-  /opt/homebrew/Cellar/opencv/4.11.0/include/opencv4/opencv2/video/background_segm.hpp
+  /opt/homebrew/Cellar/opencv/4.11.0/include/opencv4/opencv2/video/background_segm.hpp \
+  /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/include/clay_ui_wrapper.hpp \
+  /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/include/clay.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/include/c++/v1/stdbool.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/16/include/stdbool.h

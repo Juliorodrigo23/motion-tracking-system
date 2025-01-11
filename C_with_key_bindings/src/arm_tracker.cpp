@@ -1,5 +1,4 @@
 #include "arm_tracker.hpp"
-#include <Eigen/Geometry>
 
 ArmTracker::ArmTracker() {
     // Initialize active tracking flags
@@ -13,9 +12,23 @@ ArmTracker::ArmTracker() {
     palmHistory["right"] = std::deque<Eigen::Vector3d>(HISTORY_SIZE);
     rotationHistory["left"] = std::deque<double>(HISTORY_SIZE);
     rotationHistory["right"] = std::deque<double>(HISTORY_SIZE);
+    
+    // Initialize MediaPipe wrapper
+    mp_wrapper = std::make_unique<MediaPipeWrapper>();
 }
 
 ArmTracker::~ArmTracker() = default;
+
+void ArmTracker::processFrame(const cv::Mat& frame, TrackingResult& result) {
+    Eigen::MatrixXd pose_landmarks;
+    std::vector<Eigen::MatrixXd> hand_landmarks;
+    
+    if (mp_wrapper->process_frame(frame, pose_landmarks, hand_landmarks)) {
+        processFrameWithLandmarks(frame, pose_landmarks, hand_landmarks, result);
+    } else {
+        result.trackingLost = true;
+    }
+}
 
 void ArmTracker::processFrameWithLandmarks(
     const cv::Mat& frame,
@@ -66,6 +79,30 @@ void ArmTracker::processFrameWithLandmarks(
     }
 }
 
+ArmTracker::HandState ArmTracker::processHandLandmarks(
+    const Eigen::MatrixXd& landmarks,
+    const std::string& side) {
+    
+    HandState state;
+    if (landmarks.rows() < 21) {  // MediaPipe hand has 21 landmarks
+        return state;
+    }
+
+    // Convert landmarks to 3D positions
+    state.landmarks.reserve(landmarks.rows());
+    state.confidences.reserve(landmarks.rows());
+    
+    for (int i = 0; i < landmarks.rows(); ++i) {
+        state.landmarks.push_back(landmarks.row(i).head<3>());
+        // Note: MediaPipe Python API doesn't provide per-landmark confidence,
+        // so we use a default high confidence for detected landmarks
+        state.confidences.push_back(1.0);
+    }
+    
+    state.isTracked = true;
+    return state;
+}
+
 void ArmTracker::processPoseLandmarks(
     const Eigen::MatrixXd& landmarks,
     std::map<std::string, JointState>& joints) {
@@ -102,31 +139,7 @@ void ArmTracker::processPoseLandmarks(
     }
 }
 
-HandState ArmTracker::processHandLandmarks(
-    const Eigen::MatrixXd& landmarks,
-    const std::string& side) {
-    
-    HandState state;
-    if (landmarks.rows() < 21) {  // MediaPipe hand has 21 landmarks
-        return state;
-    }
-
-    // Convert landmarks to 3D positions
-    state.landmarks.reserve(landmarks.rows());
-    state.confidences.reserve(landmarks.rows());
-    
-    for (int i = 0; i < landmarks.rows(); ++i) {
-        state.landmarks.push_back(landmarks.row(i).head<3>());
-        // Note: MediaPipe Python API doesn't provide per-landmark confidence,
-        // so we use a default high confidence for detected landmarks
-        state.confidences.push_back(1.0);
-    }
-    
-    state.isTracked = true;
-    return state;
-}
-
-GestureState ArmTracker::detectRotationGesture(
+ArmTracker::GestureState ArmTracker::detectRotationGesture(
     const std::string& side,
     const HandState& hand,
     const std::map<std::string, JointState>& joints) {
@@ -186,21 +199,6 @@ Eigen::Vector3d ArmTracker::calculatePalmNormal(const HandState& hand) {
     
     // Calculate normal using cross product
     return palm_width.cross(palm_length).normalized();
-}
-
-double ArmTracker::calculateFingerExtension(const std::vector<Eigen::Vector3d>& points) {
-    if (points.size() < 4) return 0.0;
-    
-    // Calculate joint angles
-    Eigen::Vector3d v1 = points[1] - points[0];
-    Eigen::Vector3d v2 = points[2] - points[1];
-    Eigen::Vector3d v3 = points[3] - points[2];
-    
-    double angle1 = std::acos(v1.normalized().dot(v2.normalized()));
-    double angle2 = std::acos(v2.normalized().dot(v3.normalized()));
-    
-    // Return average joint angle
-    return (angle1 + angle2) / 2.0;
 }
 
 void ArmTracker::toggleArm(const std::string& side) {

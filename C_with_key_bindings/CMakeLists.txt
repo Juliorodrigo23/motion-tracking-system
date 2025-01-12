@@ -25,6 +25,7 @@ find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Python 3.12 EXACT COMPONENTS Interpreter Development REQUIRED)
 find_package(pybind11 CONFIG REQUIRED)
+find_package(Freetype REQUIRED)
 
 message(STATUS "Python_LIBRARIES: ${Python_LIBRARIES}")
 message(STATUS "Python_INCLUDE_DIRS: ${Python_INCLUDE_DIRS}")
@@ -37,6 +38,7 @@ include_directories(
     ${EIGEN3_INCLUDE_DIR}
     ${Python_INCLUDE_DIRS}
     ${pybind11_INCLUDE_DIRS}
+    ${FREETYPE_INCLUDE_DIRS}
     "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/numpy/core/include"
 )
 
@@ -56,6 +58,7 @@ target_link_libraries(arm_tracker
     Eigen3::Eigen
     pybind11::embed
     Python::Python
+    Freetype::Freetype
 )
 
 # macOS specific settings
@@ -69,3 +72,6 @@ if(APPLE)
         INSTALL_RPATH "/Library/Frameworks/Python.framework/Versions/3.12/lib"
     )
 endif()
+
+# Copy fonts to build directory
+file(COPY ${CMAKE_SOURCE_DIR}/fonts DESTINATION ${CMAKE_BINARY_DIR})

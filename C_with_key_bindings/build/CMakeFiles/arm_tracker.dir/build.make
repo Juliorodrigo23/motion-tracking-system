@@ -148,6 +148,7 @@ arm_tracker: /opt/homebrew/lib/libopencv_xfeatures2d.4.11.0.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_xobjdetect.4.11.0.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_xphoto.4.11.0.dylib
 arm_tracker: /Library/Frameworks/Python.framework/Versions/3.12/lib/libpython3.12.dylib
+arm_tracker: /opt/homebrew/lib/libfreetype.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_shape.4.11.0.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_highgui.4.11.0.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_datasets.4.11.0.dylib

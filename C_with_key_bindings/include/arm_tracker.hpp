@@ -63,6 +63,7 @@ public:
 
 private:
     std::unique_ptr<MediaPipeWrapper> mp_wrapper;
+    std::map<std::string, GestureState> lastValidGestures;
 
     // Processing methods
     void processFrameWithLandmarks(const cv::Mat& frame,
@@ -93,7 +94,11 @@ private:
     std::map<std::string, std::deque<double>> rotationHistory;
 
     // Constants
+    // Constants
     static constexpr int HISTORY_SIZE = 10;
     static constexpr double CONFIDENCE_THRESHOLD = 0.6;
-    static constexpr double GESTURE_ANGLE_THRESHOLD = 2.8; // radians
+    static constexpr double GESTURE_ANGLE_THRESHOLD = 0.1;  // radians (about 5.7 degrees)
+    static constexpr double MIN_ROTATION_THRESHOLD = 0.05;  // radians
+    static constexpr double ROTATION_SMOOTHING_FACTOR = 0.5;
+    static constexpr int MIN_STABLE_FRAMES = 2;
 };

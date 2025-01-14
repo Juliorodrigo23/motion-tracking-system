@@ -46,6 +46,8 @@ include_directories(
 set(SOURCES
     src/arm_tracker.cpp
     src/main.cpp
+    src/clay_ui_wrapper.cpp
+    src/clay_impl.cpp
 )
 
 # Create executable

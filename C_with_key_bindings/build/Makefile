@@ -153,6 +153,54 @@ src/arm_tracker.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.s
 .PHONY : src/arm_tracker.cpp.s
 
+src/clay_impl.o: src/clay_impl.cpp.o
+.PHONY : src/clay_impl.o
+
+# target to build an object file
+src/clay_impl.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o
+.PHONY : src/clay_impl.cpp.o
+
+src/clay_impl.i: src/clay_impl.cpp.i
+.PHONY : src/clay_impl.i
+
+# target to preprocess a source file
+src/clay_impl.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.i
+.PHONY : src/clay_impl.cpp.i
+
+src/clay_impl.s: src/clay_impl.cpp.s
+.PHONY : src/clay_impl.s
+
+# target to generate assembly for a file
+src/clay_impl.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.s
+.PHONY : src/clay_impl.cpp.s
+
+src/clay_ui_wrapper.o: src/clay_ui_wrapper.cpp.o
+.PHONY : src/clay_ui_wrapper.o
+
+# target to build an object file
+src/clay_ui_wrapper.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o
+.PHONY : src/clay_ui_wrapper.cpp.o
+
+src/clay_ui_wrapper.i: src/clay_ui_wrapper.cpp.i
+.PHONY : src/clay_ui_wrapper.i
+
+# target to preprocess a source file
+src/clay_ui_wrapper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.i
+.PHONY : src/clay_ui_wrapper.cpp.i
+
+src/clay_ui_wrapper.s: src/clay_ui_wrapper.cpp.s
+.PHONY : src/clay_ui_wrapper.s
+
+# target to generate assembly for a file
+src/clay_ui_wrapper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/arm_tracker.dir/build.make CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.s
+.PHONY : src/clay_ui_wrapper.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -189,6 +237,12 @@ help:
 	@echo "... src/arm_tracker.o"
 	@echo "... src/arm_tracker.i"
 	@echo "... src/arm_tracker.s"
+	@echo "... src/clay_impl.o"
+	@echo "... src/clay_impl.i"
+	@echo "... src/clay_impl.s"
+	@echo "... src/clay_ui_wrapper.o"
+	@echo "... src/clay_ui_wrapper.i"
+	@echo "... src/clay_ui_wrapper.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

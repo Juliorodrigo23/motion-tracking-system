@@ -1,5 +1,6 @@
 #include "arm_tracker.hpp"
 
+
 ArmTracker::ArmTracker() {
     // Initialize active tracking flags
     activeArms["left"] = true;
@@ -15,6 +16,8 @@ ArmTracker::ArmTracker() {
     
     // Initialize MediaPipe wrapper
     mp_wrapper = std::make_unique<MediaPipeWrapper>();
+    lastValidGestures["left"] = GestureState();
+    lastValidGestures["right"] = GestureState();
 }
 
 ArmTracker::~ArmTracker() = default;
@@ -74,8 +77,14 @@ void ArmTracker::processFrameWithLandmarks(
         if (handState.isTracked) {
             result.hands[side] = handState;
             if (result.joints.count(side + "_wrist")) {
-                result.gestures[side] = detectRotationGesture(
-                    side, handState, result.joints);
+                GestureState newGesture = detectRotationGesture(
+                side, handState, result.joints);
+
+                // Update only if we detect a valid gesture
+                if (newGesture.type != "none") {
+                lastValidGestures[side] = newGesture;
+                }
+            result.gestures[side] = lastValidGestures[side];
             }
         }
     }
@@ -141,6 +150,11 @@ void ArmTracker::processPoseLandmarks(
     }
 }
 
+static constexpr double MIN_ROTATION_THRESHOLD = 0.05;  // Lowered from 0.15
+static constexpr double ROTATION_SMOOTHING_FACTOR = 0.6; // Lowered from 0.7 for faster response
+static constexpr int MIN_STABLE_FRAMES = 2;  // Lowered from 3
+static constexpr double GESTURE_ANGLE_THRESHOLD = 0.1;  // Add if not defined elsewhere
+
 ArmTracker::GestureState ArmTracker::detectRotationGesture(
     const std::string& side,
     const HandState& hand,
@@ -153,55 +167,169 @@ ArmTracker::GestureState ArmTracker::detectRotationGesture(
     // Calculate palm normal
     Eigen::Vector3d palm_normal = calculatePalmNormal(hand);
     
-    // Update palm history
-    palmHistory[side].push_front(palm_normal);
-    palmHistory[side].pop_back();
+    // Get forearm direction for reference
+    std::string elbow_key = side + "_elbow";
+    std::string wrist_key = side + "_wrist";
     
-    // Calculate rotation angle from palm history
-    if (palmHistory[side].size() >= 2) {
-        Eigen::Vector3d prev_normal = palmHistory[side][1];
-        double angle = std::acos(palm_normal.dot(prev_normal));
-        
-        // Update rotation history
-        rotationHistory[side].push_front(angle);
-        rotationHistory[side].pop_back();
-        
-        // Calculate average rotation
-        double avg_rotation = 0.0;
-        for (double rot : rotationHistory[side]) {
-            avg_rotation += rot;
-        }
-        avg_rotation /= rotationHistory[side].size();
-        
-        // Detect rotation type
-        if (avg_rotation > GESTURE_ANGLE_THRESHOLD) {
-            // Determine rotation type based on cross product
-            Eigen::Vector3d cross = prev_normal.cross(palm_normal);
-            std::string type = (cross.y() > 0) ? "pronation" : "supination";
-            return GestureState(type, avg_rotation / GESTURE_ANGLE_THRESHOLD, avg_rotation);
-        }
+    if (joints.count(elbow_key) == 0 || joints.count(wrist_key) == 0) {
+        return GestureState();
     }
     
+    // Calculate forearm direction
+    Eigen::Vector3d forearm_dir = (joints.at(wrist_key).position - 
+                                  joints.at(elbow_key).position).normalized();
+                                  
+    // Calculate rotation axis and angle relative to anatomical reference
+    Eigen::Vector3d rotation_axis = palm_normal.cross(forearm_dir);
+    double rotation_angle = std::acos(std::clamp(palm_normal.dot(forearm_dir), -1.0, 1.0));
+    
+    // Debug output palm normal
+    std::cout << "Palm normal " << side << ": " << palm_normal.transpose() << std::endl;
+    std::cout << "Forearm direction: " << forearm_dir.transpose() << std::endl;
+    std::cout << "Rotation axis: " << rotation_axis.transpose() << std::endl;
+    std::cout << "Initial rotation angle: " << rotation_angle << std::endl;
+    
+    // Update palm history with anatomically aware normal
+    palmHistory[side].push_front(palm_normal);
+    if (palmHistory[side].size() > HISTORY_SIZE) {
+        palmHistory[side].pop_back();
+    }
+    
+    // Need at least a few frames for stable detection
+    if (palmHistory[side].size() < MIN_STABLE_FRAMES) {
+        std::cout << "Not enough frames for " << side << std::endl;
+        return GestureState();
+    }
+
+    // Calculate smoothed rotation angle from palm history
+    double cumulative_angle = 0.0;
+    Eigen::Vector3d cumulative_axis = Eigen::Vector3d::Zero();
+    int valid_samples = 0;
+
+    for (size_t i = 1; i < palmHistory[side].size(); ++i) {
+        Eigen::Vector3d curr_normal = palmHistory[side][i-1];
+        Eigen::Vector3d prev_normal = palmHistory[side][i];
+        
+        // Calculate rotation angle
+        double angle = std::acos(std::clamp(curr_normal.dot(prev_normal), -1.0, 1.0));
+        
+        std::cout << "Frame " << i << " angle: " << angle << " (threshold: " << MIN_ROTATION_THRESHOLD << ")" << std::endl;
+        
+        // Only count significant rotations
+        if (angle > MIN_ROTATION_THRESHOLD) {
+            cumulative_angle += angle;
+            cumulative_axis += curr_normal.cross(prev_normal);
+            valid_samples++;
+            std::cout << "Valid rotation detected in frame " << i << std::endl;
+        }
+    }
+
+    // If we don't have enough valid samples, no significant rotation
+    if (valid_samples < MIN_STABLE_FRAMES - 1) {
+        std::cout << "Not enough valid samples for " << side << " (" << valid_samples << " < " << (MIN_STABLE_FRAMES - 1) << ")" << std::endl;
+        return GestureState();
+    }
+
+    double avg_angle = cumulative_angle / valid_samples;
+    Eigen::Vector3d avg_axis = cumulative_axis.normalized();
+
+    std::cout << "Average angle: " << avg_angle << ", Axis: " << avg_axis.transpose() << std::endl;
+
+    // Apply exponential smoothing to rotation history
+    rotationHistory[side].push_front(avg_angle);
+    if (rotationHistory[side].size() > HISTORY_SIZE) {
+        rotationHistory[side].pop_back();
+    }
+
+    // Calculate smoothed rotation
+    double smoothed_rotation = 0.0;
+    double weight_sum = 0.0;
+    double weight = 1.0;
+
+    for (double rot : rotationHistory[side]) {
+        smoothed_rotation += rot * weight;
+        weight_sum += weight;
+        weight *= ROTATION_SMOOTHING_FACTOR;
+    }
+    smoothed_rotation /= weight_sum;
+
+    std::cout << "Smoothed rotation: " << smoothed_rotation << " (threshold: " << GESTURE_ANGLE_THRESHOLD << ")" << std::endl;
+
+    // Only detect rotation if it's significant
+    if (smoothed_rotation > GESTURE_ANGLE_THRESHOLD) {
+        bool is_supination;
+        if (side == "left") {
+            // For left arm, positive rotation around forearm axis is supination
+            is_supination = rotation_axis.dot(Eigen::Vector3d::UnitY()) < 0;
+            std::cout << "Left hand rotation axis Y: " << rotation_axis.dot(Eigen::Vector3d::UnitY()) 
+                     << ", is_supination: " << is_supination << std::endl;
+        } else {
+            // For right arm, negative rotation around forearm axis is supination
+            is_supination = rotation_axis.dot(Eigen::Vector3d::UnitY()) < 0;
+            std::cout << "Right hand rotation axis Y: " << rotation_axis.dot(Eigen::Vector3d::UnitY()) 
+                     << ", is_supination: " << is_supination << std::endl;
+        }
+        
+        std::string type = is_supination ? "supination" : "pronation";
+        double confidence = std::min(1.0, smoothed_rotation / (GESTURE_ANGLE_THRESHOLD * 2));
+        
+        std::cout << "Detected " << type << " with confidence " << confidence << std::endl;
+        
+        return GestureState(type, confidence, smoothed_rotation);
+    }
+
     return GestureState();
 }
 
 Eigen::Vector3d ArmTracker::calculatePalmNormal(const HandState& hand) {
-    // MediaPipe hand landmark indices for palm
-    const int wrist_idx = 0;
-    const int index_mcp_idx = 5;
-    const int pinky_mcp_idx = 17;
+    // MediaPipe hand landmark indices
+    const int WRIST = 0;
+    const int THUMB_CMC = 1;
+    const int INDEX_MCP = 5;
+    const int MIDDLE_MCP = 9;
+    const int RING_MCP = 13;
+    const int PINKY_MCP = 17;
+    const int MIDDLE_PIP = 10;
+    const int MIDDLE_TIP = 12;
+
+    // Get key points
+    Eigen::Vector3d wrist = hand.landmarks[WRIST];
+    Eigen::Vector3d thumb_cmc = hand.landmarks[THUMB_CMC];
+    Eigen::Vector3d index_mcp = hand.landmarks[INDEX_MCP];
+    Eigen::Vector3d middle_mcp = hand.landmarks[MIDDLE_MCP];
+    Eigen::Vector3d ring_mcp = hand.landmarks[RING_MCP];
+    Eigen::Vector3d pinky_mcp = hand.landmarks[PINKY_MCP];
+    Eigen::Vector3d middle_pip = hand.landmarks[MIDDLE_PIP];
+    Eigen::Vector3d middle_tip = hand.landmarks[MIDDLE_TIP];
+
+    // Calculate robust palm direction vectors
+    Eigen::Vector3d palm_center = (index_mcp + middle_mcp + ring_mcp + pinky_mcp) / 4.0;
+    Eigen::Vector3d palm_direction = (palm_center - wrist).normalized();
     
-    Eigen::Vector3d wrist = hand.landmarks[wrist_idx];
-    Eigen::Vector3d index_mcp = hand.landmarks[index_mcp_idx];
-    Eigen::Vector3d pinky_mcp = hand.landmarks[pinky_mcp_idx];
+    // Calculate palm width vector (perpendicular to thumb-pinky line)
+    Eigen::Vector3d thumb_pinky = (pinky_mcp - thumb_cmc).normalized();
     
-    // Calculate palm vectors
-    Eigen::Vector3d palm_width = pinky_mcp - index_mcp;
-    Eigen::Vector3d palm_length = (index_mcp + pinky_mcp) / 2 - wrist;
+    // Calculate finger direction (using middle finger as reference)
+    Eigen::Vector3d finger_direction = (middle_tip - middle_mcp).normalized();
     
-    // Calculate normal using cross product
-    return palm_width.cross(palm_length).normalized();
+    // Calculate palm normal using multiple reference vectors
+    Eigen::Vector3d normal1 = thumb_pinky.cross(palm_direction);
+    Eigen::Vector3d normal2 = thumb_pinky.cross(finger_direction);
+    
+    // Combine normals with weights
+    Eigen::Vector3d weighted_normal = (normal1 + normal2).normalized();
+    
+    // Debug output
+    std::cout << "Palm center: " << palm_center.transpose() << std::endl;
+    std::cout << "Palm direction: " << palm_direction.transpose() << std::endl;
+    std::cout << "Thumb-pinky vector: " << thumb_pinky.transpose() << std::endl;
+    std::cout << "Finger direction: " << finger_direction.transpose() << std::endl;
+    std::cout << "Weighted normal: " << weighted_normal.transpose() << std::endl;
+    
+    return weighted_normal;
 }
+
+
 
 void ArmTracker::toggleArm(const std::string& side) {
     if (activeArms.count(side)) {

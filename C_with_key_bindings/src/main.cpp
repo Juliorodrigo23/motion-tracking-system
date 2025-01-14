@@ -121,7 +121,6 @@ int main() {
     
     std::cout << "Looking for font at: " << font_path << std::endl;
     
-    // Load font
     if (!loadFont(font_path.c_str())) {
         std::cerr << "Failed to load font at: " << font_path << std::endl;
         return -1;
@@ -138,13 +137,33 @@ int main() {
     int frameHeight = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
     std::cout << "Camera resolution: " << frameWidth << "x" << frameHeight << std::endl;
     
-    // Calculate dimensions for 1/4 size while maintaining aspect ratio
-    float scale = 0.25f;  // 1/4 size
-    cv::Size scaledSize = cv::Size(frameWidth * scale, frameHeight * scale);
+    // Create initial frame to get dimensions
+    cv::Mat frame;
+    cap >> frame;
+    if (frame.empty()) {
+        std::cerr << "Error: Could not get initial frame from camera" << std::endl;
+        return -1;
+    }
     
-    // Create UI with fixed size based on scaled video dimensions plus padding
-    const int UI_WIDTH = (scaledSize.width * 2) + 100;  // Space for two videos side by side plus padding
-    const int UI_HEIGHT = scaledSize.height + 100;      // Video height plus padding
+    // Calculate dimensions for scaled size while maintaining aspect ratio
+    float scale = 0.25f;
+    cv::Size scaledSize = calculateScaledSize(frame, scale);
+    
+    // Calculate UI dimensions with proper padding and space for all elements
+    const int PADDING = 16;
+    const int VIDEO_GAP = 40;
+    const int TITLE_HEIGHT = 60;
+    const int ROTATION_PANEL_HEIGHT = 150;
+    
+    // Calculate video panel dimensions to ensure containment
+    const int VIDEO_PANEL_WIDTH = scaledSize.width + (PADDING * 1);  // Add padding on both sides
+    const int VIDEO_PANEL_HEIGHT = TITLE_HEIGHT + scaledSize.height + (PADDING * 6);  // Add padding top and bottom
+    
+    // Calculate total UI dimensions
+    const int UI_WIDTH = (VIDEO_PANEL_WIDTH * 2) + VIDEO_GAP + (PADDING * 2);  // Two panels plus gap
+    const int UI_HEIGHT = VIDEO_PANEL_HEIGHT + ROTATION_PANEL_HEIGHT + (PADDING * 2);
+    
+    // Create UI wrapper with calculated dimensions
     ClayUIWrapper ui(UI_WIDTH, UI_HEIGHT);
     
     // Create tracker
@@ -154,14 +173,13 @@ int main() {
     cv::namedWindow("Arm Tracking", cv::WINDOW_NORMAL);
     cv::resizeWindow("Arm Tracking", UI_WIDTH, UI_HEIGHT);
     
-    cv::Mat frame, debug_frame, ui_frame;
+    cv::Mat debug_frame, ui_frame;
     cv::Mat scaled_frame, scaled_debug;
     
     std::cout << "Scaled video size: " << scaledSize.width << "x" << scaledSize.height << std::endl;
     std::cout << "UI window size: " << UI_WIDTH << "x" << UI_HEIGHT << std::endl;
     
     while (true) {
-        // Capture frame
         cap >> frame;
         if (frame.empty()) break;
         
@@ -178,28 +196,30 @@ int main() {
             cv::resize(debug_frame, scaled_debug, scaledSize, 0, 0, cv::INTER_AREA);
         }
         
-        // Render Clay UI
-        ui.render(scaled_frame, scaled_debug);
+        // Render Clay UI with tracking result
+        ui.render(scaled_frame, scaled_debug, result);
         
         // Draw Clay commands
         renderClayCommands(ui_frame, ui.getRenderCommands());
         
-        // Calculate positions for video frames
-        int y_offset = 60;  // Top padding
-        int x_gap = 40;     // Gap between videos
-        
-        // Copy camera frames into UI frame
+        // Position videos within their containers - adjust positioning to account for padding and title
         if (!scaled_frame.empty()) {
-            scaled_frame.copyTo(ui_frame(cv::Rect(24, y_offset, 
-                                                scaledSize.width, 
-                                                scaledSize.height)));
-        }
-        if (!scaled_debug.empty()) {
-            scaled_debug.copyTo(ui_frame(cv::Rect(24 + scaledSize.width + x_gap, y_offset, 
-                                                scaledSize.width, 
-                                                scaledSize.height)));
+            scaled_frame.copyTo(ui_frame(cv::Rect(
+                PADDING + PADDING,  // Container padding + internal padding
+                PADDING + TITLE_HEIGHT + PADDING,  // Container padding + title + internal padding
+                scaledSize.width, 
+                scaledSize.height
+            )));
         }
         
+        if (!scaled_debug.empty()) {
+            scaled_debug.copyTo(ui_frame(cv::Rect(
+                PADDING + VIDEO_PANEL_WIDTH + VIDEO_GAP + PADDING,  // First panel + gap + paddings
+                PADDING + TITLE_HEIGHT + PADDING,  // Container padding + title + internal padding
+                scaledSize.width, 
+                scaledSize.height
+            )));
+        }
         // Show combined frame
         cv::imshow("Arm Tracking", ui_frame);
         
@@ -213,7 +233,7 @@ int main() {
             tracker.toggleFingers("right");
         }
     }
-    
+
     // Cleanup
     if (font_buffer) {
         delete[] font_buffer;
@@ -221,3 +241,4 @@ int main() {
     cv::destroyAllWindows();
     return 0;
 }
+

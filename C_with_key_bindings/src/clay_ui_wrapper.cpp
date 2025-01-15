@@ -48,7 +48,7 @@ void ClayUIWrapper::renderRotationPanel(const ArmTracker::TrackingResult& result
     CLAY(CLAY_ID("RotationPanel"), 
          CLAY_LAYOUT({
              .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
-             .padding = {16, 16},
+             .padding = {0, 0},
              .layoutDirection = CLAY_LEFT_TO_RIGHT,
              .childGap = 16
          }),
@@ -59,7 +59,7 @@ void ClayUIWrapper::renderRotationPanel(const ArmTracker::TrackingResult& result
              CLAY_LAYOUT({
                  .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
                  .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                 .childGap = 8
+                 .childGap = 2
              })) {
             renderRotationInfo("Left", result.gestures.count("left") ? 
                              &result.gestures.at("left") : nullptr);
@@ -70,7 +70,7 @@ void ClayUIWrapper::renderRotationPanel(const ArmTracker::TrackingResult& result
              CLAY_LAYOUT({
                  .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
                  .layoutDirection = CLAY_TOP_TO_BOTTOM,
-                 .childGap = 8
+                 .childGap = 2
              })) {
             renderRotationInfo("Right", result.gestures.count("right") ? 
                              &result.gestures.at("right") : nullptr);
@@ -82,15 +82,15 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
     if (side == "Left") {
         CLAY(CLAY_ID("LeftRotationInfo"),
              CLAY_LAYOUT({
-                 .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_FIT(0) },
+                 .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                  .padding = {16, 16},
-                 .childGap = 8
+                 .childGap = 2
              }),
              CLAY_RECTANGLE({ .color = colors.card })) {
 
             CLAY_TEXT(CLAY_STRING("Left Arm Rotation:"),
                      CLAY_TEXT_CONFIG({
-                         .fontSize = 24,
+                         .fontSize = 18,
                          .textColor = colors.title
                      }));
 
@@ -99,13 +99,13 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
                 if (gesture->type == "supination") {
                     CLAY_TEXT(CLAY_STRING("Supination"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 24,
                                 .textColor = colors.text
                             }));
                 } else {
                     CLAY_TEXT(CLAY_STRING("Pronation"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 24,
                                 .textColor = colors.text
                             }));
                 }
@@ -118,46 +118,27 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
                 if (confidence > 70) {
                     CLAY_TEXT(CLAY_STRING("High Confidence"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 12,
                                 .textColor = confColor
                             }));
                 } else if (confidence > 40) {
                     CLAY_TEXT(CLAY_STRING("Medium Confidence"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 12,
                                 .textColor = confColor
                             }));
                 } else {
                     CLAY_TEXT(CLAY_STRING("Low Confidence"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 12,
                                 .textColor = confColor
                             }));
                 }
 
-                if (gesture->angle < 45.0) {
-                    CLAY_TEXT(CLAY_STRING("Small Angle"),
-                            CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
-                                .textColor = colors.text
-                            }));
-                } else if (gesture->angle < 90.0) {
-                    CLAY_TEXT(CLAY_STRING("Medium Angle"),
-                            CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
-                                .textColor = colors.text
-                            }));
-                } else {
-                    CLAY_TEXT(CLAY_STRING("Large Angle"),
-                            CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
-                                .textColor = colors.text
-                            }));
-                }
             } else {
                 CLAY_TEXT(CLAY_STRING("No rotation detected"),
                         CLAY_TEXT_CONFIG({
-                            .fontSize = 16,
+                            .fontSize = 12,
                             .textColor = colors.text
                         }));
             }
@@ -166,15 +147,15 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
         // Right side with similar structure
         CLAY(CLAY_ID("RightRotationInfo"),
              CLAY_LAYOUT({
-                 .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_FIT(0) },
+                 .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
                  .padding = {16, 16},
-                 .childGap = 8
+                 .childGap = 2
              }),
              CLAY_RECTANGLE({ .color = colors.card })) {
 
             CLAY_TEXT(CLAY_STRING("Right Arm Rotation:"),
                      CLAY_TEXT_CONFIG({
-                         .fontSize = 24,
+                         .fontSize = 18,
                          .textColor = colors.title
                      }));
 
@@ -182,13 +163,13 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
                 if (gesture->type == "supination") {
                     CLAY_TEXT(CLAY_STRING("Supination"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 24,
                                 .textColor = colors.text
                             }));
                 } else {
                     CLAY_TEXT(CLAY_STRING("Pronation"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 24,
                                 .textColor = colors.text
                             }));
                 }
@@ -201,46 +182,28 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
                 if (confidence > 70) {
                     CLAY_TEXT(CLAY_STRING("High Confidence"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 12,
                                 .textColor = confColor
                             }));
                 } else if (confidence > 40) {
                     CLAY_TEXT(CLAY_STRING("Medium Confidence"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 12,
                                 .textColor = confColor
                             }));
                 } else {
                     CLAY_TEXT(CLAY_STRING("Low Confidence"),
                             CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
+                                .fontSize = 12,
                                 .textColor = confColor
                             }));
                 }
 
-                if (gesture->angle < 45.0) {
-                    CLAY_TEXT(CLAY_STRING("Small Angle"),
-                            CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
-                                .textColor = colors.text
-                            }));
-                } else if (gesture->angle < 90.0) {
-                    CLAY_TEXT(CLAY_STRING("Medium Angle"),
-                            CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
-                                .textColor = colors.text
-                            }));
-                } else {
-                    CLAY_TEXT(CLAY_STRING("Large Angle"),
-                            CLAY_TEXT_CONFIG({
-                                .fontSize = 16,
-                                .textColor = colors.text
-                            }));
-                }
+                
             } else {
                 CLAY_TEXT(CLAY_STRING("No rotation detected"),
                         CLAY_TEXT_CONFIG({
-                            .fontSize = 16,
+                            .fontSize = 12,
                             .textColor = colors.text
                         }));
             }
@@ -284,7 +247,7 @@ void ClayUIWrapper::renderVideoPanel(const std::string& panelId) {
             CLAY(CLAY_ID("LeftPanelVideo"),
                  CLAY_LAYOUT({
                      .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
-                     .padding = {16, 16}
+                     .padding = {32, 16}
                  }),
                  CLAY_RECTANGLE({ .color = colors.background })) {}
         }

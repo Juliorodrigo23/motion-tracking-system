@@ -78,7 +78,7 @@ void renderClayCommands(cv::Mat& output, const Clay_RenderCommandArray& commands
                 for (char c : text_str) {
                     int w, h, xoff, yoff;
                     unsigned char* bitmap = stbtt_GetCodepointBitmap(&font_info, scale, scale,
-                                                                   c, &w, &h, &xoff, &yoff);
+                                                                c, &w, &h, &xoff, &yoff);
 
                     // Blend character bitmap onto output
                     for (int row = 0; row < h; row++) {
@@ -201,7 +201,7 @@ int main() {
         
         // Draw Clay commands
         renderClayCommands(ui_frame, ui.getRenderCommands());
-        
+        //LEFT VIDEO
         // Position videos within their containers - adjust positioning to account for padding and title
         if (!scaled_frame.empty()) {
             scaled_frame.copyTo(ui_frame(cv::Rect(
@@ -211,10 +211,10 @@ int main() {
                 scaledSize.height
             )));
         }
-        
+        //RIGHT VIDEO   
         if (!scaled_debug.empty()) {
             scaled_debug.copyTo(ui_frame(cv::Rect(
-                PADDING + VIDEO_PANEL_WIDTH + VIDEO_GAP + PADDING,  // First panel + gap + paddings
+                PADDING + VIDEO_PANEL_WIDTH + VIDEO_GAP,  // First panel + gap + paddings
                 PADDING + TITLE_HEIGHT + PADDING,  // Container padding + title + internal padding
                 scaledSize.width, 
                 scaledSize.height

@@ -23,7 +23,7 @@ public:
         
         Clay_SetMeasureTextFunction(MeasureText);
         
-        colors.background = (Clay_Color){32, 33, 36, 255};
+        colors.background = (Clay_Color){0, 0, 0, 255};
         colors.card = (Clay_Color){15, 47, 62, 255};
         colors.accent = (Clay_Color){66, 133, 244, 255};
         colors.text = (Clay_Color){255, 255, 255, 255};

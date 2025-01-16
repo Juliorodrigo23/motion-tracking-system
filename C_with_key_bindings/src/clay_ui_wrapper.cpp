@@ -88,7 +88,7 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
              }),
              CLAY_RECTANGLE({ .color = colors.card })) {
 
-            CLAY_TEXT(CLAY_STRING("Left Arm Rotation:"),
+            CLAY_TEXT(CLAY_STRING("Left Arm:"),
                      CLAY_TEXT_CONFIG({
                          .fontSize = 18,
                          .textColor = colors.title
@@ -138,7 +138,7 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
             } else {
                 CLAY_TEXT(CLAY_STRING("No rotation detected"),
                         CLAY_TEXT_CONFIG({
-                            .fontSize = 12,
+                            .fontSize = 24,
                             .textColor = colors.text
                         }));
             }
@@ -153,7 +153,7 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
              }),
              CLAY_RECTANGLE({ .color = colors.card })) {
 
-            CLAY_TEXT(CLAY_STRING("Right Arm Rotation:"),
+            CLAY_TEXT(CLAY_STRING("Right Arm:"),
                      CLAY_TEXT_CONFIG({
                          .fontSize = 18,
                          .textColor = colors.title
@@ -203,7 +203,7 @@ void ClayUIWrapper::renderRotationInfo(const std::string& side, const ArmTracker
             } else {
                 CLAY_TEXT(CLAY_STRING("No rotation detected"),
                         CLAY_TEXT_CONFIG({
-                            .fontSize = 12,
+                            .fontSize = 24,
                             .textColor = colors.text
                         }));
             }

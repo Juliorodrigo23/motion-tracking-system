@@ -12,32 +12,105 @@ void ClayUIWrapper::render(const cv::Mat& raw_frame,
                  CLAY_SIZING_FIXED(static_cast<float>(window_height)) 
              },
              .padding = {16, 16},
-             .childGap = 250,
+             .childGap = 16,
              .layoutDirection = CLAY_TOP_TO_BOTTOM
          }),
          CLAY_RECTANGLE({.color = colors.background})) {
         
-        CLAY(CLAY_ID("VideoPanelsContainer"),
+        // Header section with record button
+        CLAY(CLAY_ID("Header"),
              CLAY_LAYOUT({
-                 .sizing = { 
-                     CLAY_SIZING_GROW(1), 
-                     CLAY_SIZING_FIXED(static_cast<float>(raw_frame.rows * 0.6))
-                 },
+                 .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_FIXED(120) },
                  .layoutDirection = CLAY_LEFT_TO_RIGHT,
+                 .padding = {8, 8},
                  .childGap = 16
              })) {
             
-            renderVideoPanel("LeftPanel");
-            renderVideoPanel("RightPanel");
+            // Logo space reservation (we'll render it manually)
+            CLAY(CLAY_ID("LogoSpace"),
+                 CLAY_LAYOUT({
+                     .sizing = { CLAY_SIZING_FIXED(125), CLAY_SIZING_FIXED(100) }
+                 })) {}
+
+            // Spacer to push record button to the right
+            CLAY(CLAY_ID("HeaderSpacer"),
+                 CLAY_LAYOUT({
+                     .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_FIXED(32) }
+                 })) {}
+
+            // Record button (aligned right)
+            if (is_recording) {
+                CLAY(CLAY_ID("RecordButtonStop"),
+                     CLAY_LAYOUT({
+                         .sizing = { CLAY_SIZING_FIXED(100), CLAY_SIZING_FIXED(32) },
+                         .padding = {8, 8}
+                     }),
+                     CLAY_RECTANGLE({ 
+                         .color = colors.error,
+                         .cornerRadius = 16
+                     })) {
+                    CLAY_TEXT(CLAY_STRING("Stop"),
+                             CLAY_TEXT_CONFIG({
+                                 .fontSize = 14,
+                                 .textColor = colors.text,
+                                 .letterSpacing = 1
+                             }));
+                }
+            } else {
+                CLAY(CLAY_ID("RecordButtonStart"),
+                     CLAY_LAYOUT({
+                         .sizing = { CLAY_SIZING_FIXED(100), CLAY_SIZING_FIXED(32) },
+                         .padding = {8, 8}
+                     }),
+                     CLAY_RECTANGLE({ 
+                         .color = colors.success,
+                         .cornerRadius = 16
+                     })) {
+                    CLAY_TEXT(CLAY_STRING("Record"),
+                             CLAY_TEXT_CONFIG({
+                                 .fontSize = 14,
+                                 .textColor = colors.text,
+                                 .letterSpacing = 1
+                             }));
+                }
+            }
         }
 
-        CLAY(CLAY_ID("RotationContainer"),
+        // Content container with larger gap
+        CLAY(CLAY_ID("ContentContainer"),
              CLAY_LAYOUT({
-                 .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
-                 .layoutDirection = CLAY_LEFT_TO_RIGHT,
-                 .childGap = 16
+                .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
+                .layoutDirection = CLAY_TOP_TO_BOTTOM,
+                .childAlignment = {  
+                .x = CLAY_ALIGN_X_LEFT,
+                .y = CLAY_ALIGN_Y_TOP
+                },
+                 .childGap = 250
              })) {
-            renderRotationPanel(result);
+            
+            // Video panels container
+            CLAY(CLAY_ID("VideoPanelsContainer"),
+                 CLAY_LAYOUT({
+                     .sizing = { 
+                         CLAY_SIZING_GROW(1), 
+                         CLAY_SIZING_FIXED(static_cast<float>(raw_frame.rows * 0.6))
+                     },
+                     .layoutDirection = CLAY_LEFT_TO_RIGHT,
+                     .childGap = 16
+                 })) {
+                renderVideoPanel("LeftPanel");
+                renderVideoPanel("RightPanel");
+            }
+
+            // Rotation container
+            CLAY(CLAY_ID("RotationContainer"),
+                 CLAY_LAYOUT({
+                     .sizing = { CLAY_SIZING_GROW(1), CLAY_SIZING_GROW(1) },
+                     .layoutDirection = CLAY_LEFT_TO_RIGHT,
+                     .childGap = 16
+                 })) {
+                renderRotationPanel(result);
+            }
         }
     }
 

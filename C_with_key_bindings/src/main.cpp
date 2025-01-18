@@ -201,21 +201,24 @@ int main() {
         
         // Draw Clay commands
         renderClayCommands(ui_frame, ui.getRenderCommands());
+        ui.overlayLogo(ui_frame);  
         //LEFT VIDEO
         // Position videos within their containers - adjust positioning to account for padding and title
         if (!scaled_frame.empty()) {
+            int vertical_center = (UI_HEIGHT - scaledSize.height) / 2;
             scaled_frame.copyTo(ui_frame(cv::Rect(
                 PADDING + PADDING,  // Container padding + internal padding
-                PADDING + TITLE_HEIGHT + PADDING,  // Container padding + title + internal padding
+                vertical_center + PADDING,  // Container padding + title + internal padding
                 scaledSize.width, 
                 scaledSize.height
             )));
         }
         //RIGHT VIDEO   
         if (!scaled_debug.empty()) {
+            int vertical_center = (UI_HEIGHT - scaledSize.height) / 2;
             scaled_debug.copyTo(ui_frame(cv::Rect(
                 PADDING + VIDEO_PANEL_WIDTH + VIDEO_GAP,  // First panel + gap + paddings
-                PADDING + TITLE_HEIGHT + PADDING,  // Container padding + title + internal padding
+                vertical_center + PADDING,,
                 scaledSize.width, 
                 scaledSize.height
             )));

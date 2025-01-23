@@ -153,15 +153,15 @@ int main() {
     const int PADDING = 16;
     const int VIDEO_GAP = 40;
     const int TITLE_HEIGHT = 60;
-    const int ROTATION_PANEL_HEIGHT = 150;
+    const int ROTATION_PANEL_HEIGHT = 200;
     
     // Calculate video panel dimensions to ensure containment
     const int VIDEO_PANEL_WIDTH = scaledSize.width + (PADDING * 1);  // Add padding on both sides
-    const int VIDEO_PANEL_HEIGHT = TITLE_HEIGHT + scaledSize.height + (PADDING * 6);  // Add padding top and bottom
+    const int VIDEO_PANEL_HEIGHT = TITLE_HEIGHT + scaledSize.height + (PADDING * 3.25);  // Add padding top and bottom
     
     // Calculate total UI dimensions
     const int UI_WIDTH = (VIDEO_PANEL_WIDTH * 2) + VIDEO_GAP + (PADDING * 2);  // Two panels plus gap
-    const int UI_HEIGHT = VIDEO_PANEL_HEIGHT + ROTATION_PANEL_HEIGHT + (PADDING * 2);
+    const int UI_HEIGHT = VIDEO_PANEL_HEIGHT + ROTATION_PANEL_HEIGHT + (PADDING * 3);
     
     // Create UI wrapper with calculated dimensions
     ClayUIWrapper ui(UI_WIDTH, UI_HEIGHT);
@@ -208,7 +208,7 @@ int main() {
             int vertical_center = (UI_HEIGHT - scaledSize.height) / 2;
             scaled_frame.copyTo(ui_frame(cv::Rect(
                 PADDING + PADDING,  // Container padding + internal padding
-                vertical_center + PADDING,  // Container padding + title + internal padding
+                vertical_center + PADDING*4,  // Container padding + title + internal padding
                 scaledSize.width, 
                 scaledSize.height
             )));
@@ -218,7 +218,7 @@ int main() {
             int vertical_center = (UI_HEIGHT - scaledSize.height) / 2;
             scaled_debug.copyTo(ui_frame(cv::Rect(
                 PADDING + VIDEO_PANEL_WIDTH + VIDEO_GAP,  // First panel + gap + paddings
-                vertical_center + PADDING,,
+                vertical_center + PADDING*4,
                 scaledSize.width, 
                 scaledSize.height
             )));

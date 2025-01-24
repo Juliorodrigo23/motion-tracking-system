@@ -122,7 +122,7 @@ private:
         float baseWidth = text->length * config->fontSize * 0.58f;
         float letterSpacingTotal = (text->length - 1) * config->letterSpacing;
         float totalWidth = baseWidth + letterSpacingTotal;
-        float height = config->fontSize * 1.2f;
+        float height = config->lineHeight > 0 ? config->lineHeight : (config->fontSize * 1.2f);
         
         return (Clay_Dimensions){
             totalWidth,

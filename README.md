@@ -188,6 +188,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 ## Python Implementation
 
 ![Python Implementation Demo](1x/DemoForPythonTracking.gif)
+> **Note**: The Python is very basic and was quickly deployed. The tracking lags behind by a few seconds and the supination/pronation is flipped.
 
 ### Features 
 

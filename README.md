@@ -35,8 +35,8 @@ A robust real-time motion tracking system using MediaPipe and OpenCV for trackin
 
 The **Advanced Motion Tracking System** uses cutting-edge computer vision technologies to enable real-time tracking of arm movements and gestures. This project features two distinct implementations:
 
-- **C++ Implementation**: Built with C++20, OpenCV, and MediaPipe, and integrates Python bindings via PyBind11.
-- **Python Implementation**: A flexible and interactive system leveraging Python libraries such as MediaPipe, OpenCV, and Matplotlib.
+- **C++ Implementation**: Built with C++20, OpenCV, and MediaPipe, and integrates Python bindings via PyBind11. This is the main application and will be the one updated going forward. There is a large emphasis on real-time performance, building every aspect to be as fast as possible. 
+- **Python Implementation**: A flexible and interactive system leveraging Python libraries such as MediaPipe, OpenCV, and Matplotlib. This was mainly made as a proof of concept.
 
 ---
 
@@ -186,6 +186,8 @@ The application performs pose detection using MediaPipe and visualizes the resul
 ---
 
 ## Python Implementation
+
+![Python Implementation Demo](1x/OhPeak.png)
 
 ### Features 
 

@@ -23,15 +23,49 @@ ArmTracker::ArmTracker() {
 ArmTracker::~ArmTracker() = default;
 
 bool ArmTracker::processFrame(const cv::Mat& frame, TrackingResult& result, cv::Mat& debug_output) {
-    Eigen::MatrixXd pose_landmarks;
-    std::vector<Eigen::MatrixXd> hand_landmarks;
-    
-    if (mp_wrapper->process_frame(frame, pose_landmarks, hand_landmarks, debug_output)) {
-        processFrameWithLandmarks(frame, pose_landmarks, hand_landmarks, result);
-        return true;
-    } else {
+    try {
+        Eigen::MatrixXd pose_landmarks;
+        std::vector<Eigen::MatrixXd> hand_landmarks;
+        
+        // Always copy the input frame to debug_output initially
+        frame.copyTo(debug_output);
+        
+        // Process frame - should always return true now
+        if (mp_wrapper->process_frame(frame, pose_landmarks, hand_landmarks, debug_output,
+                                    activeArms, activeFingers)) {
+            
+            if (pose_landmarks.rows() > 0) {
+                processFrameWithLandmarks(frame, pose_landmarks, hand_landmarks, result);
+                result.trackingLost = false;
+            } else {
+                result.trackingLost = true;
+                result.joints.clear();
+                result.hands.clear();
+                result.gestures.clear();
+            }
+            
+            return true;  // Always return true to keep program running
+        }
+        
+        // This should never happen now, but just in case
         result.trackingLost = true;
-        return false;
+        result.joints.clear();
+        result.hands.clear();
+        result.gestures.clear();
+        return true;  // Keep program running
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Error in ArmTracker::processFrame: " << e.what() << std::endl;
+        // Make sure we have a valid debug output
+        if (debug_output.empty()) {
+            frame.copyTo(debug_output);
+        }
+        // Clear all tracking data
+        result.trackingLost = true;
+        result.joints.clear();
+        result.hands.clear();
+        result.gestures.clear();
+        return true;  // Keep program running
     }
 }
 
@@ -177,8 +211,8 @@ ArmTracker::GestureState ArmTracker::detectRotationGesture(
     
     // Calculate forearm direction
     Eigen::Vector3d forearm_dir = (joints.at(wrist_key).position - 
-                                  joints.at(elbow_key).position).normalized();
-                                  
+                                joints.at(elbow_key).position).normalized();
+                                
     // Calculate rotation axis and angle relative to anatomical reference
     Eigen::Vector3d rotation_axis = palm_normal.cross(forearm_dir);
     double rotation_angle = std::acos(std::clamp(palm_normal.dot(forearm_dir), -1.0, 1.0));
@@ -262,12 +296,12 @@ ArmTracker::GestureState ArmTracker::detectRotationGesture(
             // For left arm, positive rotation around forearm axis is supination
             is_supination = rotation_axis.dot(Eigen::Vector3d::UnitY()) < 0;
             std::cout << "Left hand rotation axis Y: " << rotation_axis.dot(Eigen::Vector3d::UnitY()) 
-                     << ", is_supination: " << is_supination << std::endl;
+                    << ", is_supination: " << is_supination << std::endl;
         } else {
             // For right arm, negative rotation around forearm axis is supination
             is_supination = rotation_axis.dot(Eigen::Vector3d::UnitY()) < 0;
             std::cout << "Right hand rotation axis Y: " << rotation_axis.dot(Eigen::Vector3d::UnitY()) 
-                     << ", is_supination: " << is_supination << std::endl;
+                    << ", is_supination: " << is_supination << std::endl;
         }
         
         std::string type = is_supination ? "supination" : "pronation";
@@ -334,6 +368,8 @@ Eigen::Vector3d ArmTracker::calculatePalmNormal(const HandState& hand) {
 void ArmTracker::toggleArm(const std::string& side) {
     if (activeArms.count(side)) {
         activeArms[side] = !activeArms[side];
+        // Fingers will be shown/hidden based on arm state in the drawing logic
+        // but maintain their own toggle state
     }
 }
 

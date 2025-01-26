@@ -15,7 +15,6 @@ public:
         arena = Clay_CreateArenaWithCapacityAndMemory(memorySize, arenaMemory);
         Clay_Initialize(arena, (Clay_Dimensions){(uint32_t)width, (uint32_t)height});
         
-        // Set up text measurement (you'll need to implement this)
         Clay_SetMeasureTextFunction(MeasureText);
         
         // Initialize colors
@@ -43,36 +42,36 @@ public:
         
         // Main container
         CLAY(CLAY_ID("MainContainer"), 
-             CLAY_LAYOUT({
-                 .sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
-                 .layoutDirection = CLAY_LEFT_TO_RIGHT
-             }), 
-             CLAY_RECTANGLE({.color = colors.background})) {
+            CLAY_LAYOUT({
+                .sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
+                .layoutDirection = CLAY_LEFT_TO_RIGHT
+            }), 
+            CLAY_RECTANGLE({.color = colors.background})) {
             
             // Sidebar
             CLAY(CLAY_ID("Sidebar"),
-                 CLAY_LAYOUT({
-                     .sizing = {CLAY_SIZING_FIXED(300), CLAY_SIZING_GROW(0)},
-                     .padding = {16, 16},
-                     .childGap = 16,
-                     .layoutDirection = CLAY_TOP_TO_BOTTOM
-                 }),
-                 CLAY_RECTANGLE({.color = colors.sidebar})) {
+                CLAY_LAYOUT({
+                    .sizing = {CLAY_SIZING_FIXED(300), CLAY_SIZING_GROW(0)},
+                    .padding = {16, 16},
+                    .childGap = 16,
+                    .layoutDirection = CLAY_TOP_TO_BOTTOM
+                }),
+                CLAY_RECTANGLE({.color = colors.sidebar})) {
                 
                 // Title
                 CLAY_TEXT(CLAY_STRING("Arm Tracking"), 
-                         CLAY_TEXT_CONFIG({
-                             .fontSize = 24,
-                             .textColor = colors.text
-                         }));
+                        CLAY_TEXT_CONFIG({
+                            .fontSize = 24,
+                            .textColor = colors.text
+                        }));
                 
                 // Status
                 CLAY(CLAY_LAYOUT({.padding = {8, 8}}),
-                     CLAY_RECTANGLE({
-                         .color = result.trackingLost ? 
-                                 (Clay_Color){255, 100, 100, 255} : 
-                                 (Clay_Color){100, 255, 100, 255}
-                     })) {
+                    CLAY_RECTANGLE({
+                        .color = result.trackingLost ? 
+                                (Clay_Color){255, 100, 100, 255} : 
+                                (Clay_Color){100, 255, 100, 255}
+                    })) {
                     CLAY_TEXT(
                         CLAY_STRING(result.trackingLost ? "Tracking Lost" : "Tracking Active"),
                         CLAY_TEXT_CONFIG({
@@ -85,11 +84,11 @@ public:
                 // Joint information
                 for (const auto& [joint_name, joint_state] : result.joints) {
                     CLAY(CLAY_LAYOUT({
-                             .padding = {8, 8},
-                             .childGap = 4,
-                             .layoutDirection = CLAY_TOP_TO_BOTTOM
-                         }),
-                         CLAY_RECTANGLE({.color = colors.accent})) {
+                            .padding = {8, 8},
+                            .childGap = 4,
+                            .layoutDirection = CLAY_TOP_TO_BOTTOM
+                        }),
+                        CLAY_RECTANGLE({.color = colors.accent})) {
                         // Joint name
                         CLAY_TEXT(
                             CLAY_STRING(joint_name.c_str()),
@@ -116,10 +115,10 @@ public:
             
             // Main content area
             CLAY(CLAY_ID("Content"),
-                 CLAY_LAYOUT({
-                     .sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
-                     .padding = {16, 16}
-                 })) {
+                CLAY_LAYOUT({
+                    .sizing = {CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
+                    .padding = {16, 16}
+                })) {
                 // Here you would render your OpenCV frame
                 // You'll need to implement custom rendering for the video frame
             }

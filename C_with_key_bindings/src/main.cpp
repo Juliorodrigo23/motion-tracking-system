@@ -208,7 +208,7 @@ int main() {
             int vertical_center = (UI_HEIGHT - scaledSize.height) / 2;
             scaled_frame.copyTo(ui_frame(cv::Rect(
                 PADDING + PADDING,  // Container padding + internal padding
-                vertical_center + PADDING*4,  // Container padding + title + internal padding
+                vertical_center + PADDING*4,  // Center vertically in container
                 scaledSize.width, 
                 scaledSize.height
             )));

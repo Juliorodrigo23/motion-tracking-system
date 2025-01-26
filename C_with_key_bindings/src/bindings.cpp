@@ -14,7 +14,7 @@ PYBIND11_MODULE(arm_tracker_python, m) {
             // Convert numpy array to cv::Mat
             auto frame_info = frame.request();
             cv::Mat cv_frame(frame_info.shape[0], frame_info.shape[1], 
-                           CV_8UC3, (void*)frame_info.ptr);
+                        CV_8UC3, (void*)frame_info.ptr);
             
             // Process landmarks
             ArmTracker::TrackingResult result;

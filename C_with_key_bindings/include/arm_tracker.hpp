@@ -94,7 +94,6 @@ private:
     std::map<std::string, std::deque<double>> rotationHistory;
 
     // Constants
-    // Constants
     static constexpr int HISTORY_SIZE = 10;
     static constexpr double CONFIDENCE_THRESHOLD = 0.6;
     static constexpr double GESTURE_ANGLE_THRESHOLD = 0.1;  // radians (about 5.7 degrees)

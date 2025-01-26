@@ -1,113 +1,254 @@
 # Advanced Motion Tracking System
 
-A robust real-time motion tracking system using MediaPipe and OpenCV for tracking arm movements, hand gestures, and pose estimation. The system features advanced Kalman filtering, 3D visualization, and a Qt-based GUI interface.
+A robust real-time motion tracking system using MediaPipe and OpenCV for tracking arm movements, hand gestures, and pose estimation. The system features advanced Kalman filtering, 3D visualization, and a Clay (for C++ integration)/ Qt-based (for Python integration) GUI interface. This README covers both C++ and Python implementations, with detailed sections for each.
 
-## Features
+> **Note**: The C++ implementation is currently configured for macOS systems with Apple Silicon. Compatibility with other platforms may require additional modifications to `CMakeLists.txt` and dependency paths.
 
-- **Dual Arm Tracking**: Simultaneous tracking of both left and right arms
-- **Hand Gesture Recognition**: Detection of pronation/supination movements and finger states
-- **3D Pose Estimation**: Real-time calculation of joint positions and orientations
-- **Advanced Filtering**: Kalman filtering for smooth and stable tracking
-- **Real-time Visualization**:
-  - 3D arm position visualization
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [C++ Implementation](#c-implementation)
+    - [Features](#features-cpp)
+    - [Directory Structure](#directory-structure-cpp)
+    - [Clay UI Integration](#clay-ui-integration)
+    - [Installation & Build Instructions](#installation--build-instructions-cpp)
+    - [Usage](#usage-cpp)
+    - [Technical Details](#technical-details-cpp)
+    - [Troubleshooting](#troubleshooting-cpp)
+3. [Python Implementation](#python-implementation)
+    - [Features](#features-python)
+    - [Installation](#installation-python)
+    - [Usage](#usage-python)
+    - [Technical Details](#technical-details-python)
+4. [Contributing](#contributing)
+5. [License](#license)
+6. [Acknowledgments](#acknowledgments)
+
+---
+
+## Introduction
+
+The **Advanced Motion Tracking System** uses cutting-edge computer vision technologies to enable real-time tracking of arm movements and gestures. This project features two distinct implementations:
+
+- **C++ Implementation**: Built with C++20, OpenCV, and MediaPipe, and integrates Python bindings via PyBind11.
+- **Python Implementation**: A flexible and interactive system leveraging Python libraries such as MediaPipe, OpenCV, and Matplotlib.
+
+---
+
+## C++ Implementation
+
+### Features {#features-cpp}
+
+- **Pose Tracking**: Uses MediaPipe’s pose detection to track arm and hand movements.
+- **OpenCV Integration**: Provides camera input, image processing, and real-time visualization.
+- **PyBind11 Embedding**: Embeds Python modules for additional functionality, such as MediaPipe pipelines.
+- **Kalman Filtering**: Smoothens tracking data to minimize noise.
+- **Clay UI Integration**: Leverages the lightweight "Clay" library for responsive and efficient UI layout.
+
+---
+
+### Directory Structure {#directory-structure-cpp}
+
+```
+C_with_key_bindings/
+├── CMakeLists.txt                # Top-level CMake configuration
+├── requirements.txt              # Python dependencies
+├── build/                        # Generated build artifacts
+│   ├── arm_tracker               # Built executable
+│   ├── fonts/                    # Fonts copied for rendering
+│   └── CMakeFiles/               # CMake internal files
+├── fonts/
+│   └── Roboto-Regular.ttf        # Font file for text rendering
+├── include/                      # Header files
+│   ├── arm_tracker.hpp           # Main header for tracking logic
+│   ├── kalman_filter.hpp         # Kalman filter implementation
+│   ├── mediapipe_wrapper.hpp     # MediaPipe-related functionality
+│   ├── ui_wrapper.hpp            # Abstract UI wrapper
+│   ├── visualizer.hpp            # Visualization helpers
+│   ├── clay.h                    # "Clay" UI integration
+│   ├── clay_ui_wrapper.hpp       # Wrapper for clay UI
+│   └── stb_truetype.h            # Font rendering support
+└── src/                          # Source files
+    ├── arm_tracker.cpp           # Core tracking logic
+    ├── main.cpp                  # Entry point of the application
+    ├── bindings.cpp              # PyBind11 Python bindings
+    ├── clay_impl.cpp             # Implementation for clay UI
+    └── clay_ui_wrapper.cpp       # Wrapper for clay UI
+```
+
+---
+
+### Clay UI Integration {#clay-ui-integration}
+
+"Clay" is a high-performance 2D UI layout library designed for responsive and efficient layouts. Major features include:
+
+- **Microsecond Layout Performance**: Optimized for speed with static arena-based memory use.
+- **Declarative Syntax**: Nested, React-like syntax for complex layouts.
+- **Renderer Agnostic**: Outputs sorted rendering primitives, compatible with 3D engines or HTML.
+- **No Dependencies**: Self-contained `clay.h` with zero external dependencies.
+
+#### Licensing
+
+"Clay" by Nic Barker is licensed under the zlib/libpng license:
+
+- Free to use, modify, and redistribute, including for commercial purposes.
+- Requires acknowledgment in the product documentation if redistributed.
+
+For more details, visit the [Clay GitHub repository](https://github.com/nicbarker/clay).
+
+---
+
+### Installation & Build Instructions {#installation--build-instructions-cpp}
+
+#### Prerequisites
+- **macOS with Apple Silicon**: The C++ implementation has been tested and configured specifically for macOS systems running on Apple Silicon.
+- **CMake >= 3.10**
+- **C++20 compiler** (Apple Clang, GCC, or MSVC)
+- **OpenCV**
+- **Eigen3**
+- **Freetype**
+- **Python 3.12**
+- **PyBind11**
+
+#### Steps
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Juliorodrigo23/motion-tracking-system
+   cd motion-tracking-system/C_with_key_bindings
+   ```
+
+2. **Install Python Dependencies**:
+   ```bash
+   python3.12 -m pip install -r requirements.txt
+   ```
+
+3. **Configure and Build**:
+   ```bash
+   mkdir build && cd build
+   cmake ..
+   make
+   ```
+
+4. **Run the Executable**:
+   ```bash
+   ./arm_tracker
+   ```
+
+---
+
+### Usage {#usage-cpp}
+
+The application performs pose detection using MediaPipe and visualizes the results with OpenCV. Key bindings are defined in `main.cpp`:
+
+- **ESC**: Quit the application
+- **F**: Pause/Resume Finger tracking
+- **L/R**: Toggle left/right arm tracking
+
+---
+
+### Technical Details {#technical-details-cpp}
+
+#### Core Components
+
+1. **Pose Detection**:
+   - MediaPipe’s pose model identifies arm and hand landmarks.
+
+2. **Kalman Filtering**:
+   - Implements state estimation for smoother tracking.
+
+3. **UI and Visualization**:
+   - OpenCV renders video feed with augmented tracking overlays.
+   - Fonts are handled using `stb_truetype.h` and Freetype.
+
+4. **Python Embedding**:
+   - PyBind11 integrates Python code for extended functionality.
+
+#### Coordinate Systems
+
+- Camera frame: Raw MediaPipe output.
+- World frame: Aligned coordinate system for visualization.
+- Arm frame: Local wrist-centered coordinate system.
+
+---
+
+### Troubleshooting {#troubleshooting-cpp}
+
+- **Missing Python or PyBind11**: Verify Python paths in `CMakeLists.txt`.
+- **OpenCV Linking Errors**: Confirm the correct version of OpenCV is installed.
+- **Build Errors on macOS**: Ensure Homebrew paths are correctly configured in `CMakeLists.txt`.
+
+---
+
+## Python Implementation
+
+### Features {#features-python}
+
+- **Dual Arm Tracking**: Tracks both arms and recognizes gestures.
+- **Hand Gesture Recognition**: Detects pronation, supination, and finger states.
+- **3D Pose Estimation**: Calculates joint positions and orientations.
+- **Advanced Filtering**: Kalman filtering smoothens tracking data.
+- **Real-Time Visualization**:
+  - 3D skeleton visualization
   - Rotation angle plots
   - Gesture confidence metrics
-  - Live video feed with augmented tracking overlay
-- **Interactive Controls**: Toggle tracking for individual arms and finger detection
+  - Augmented video feed
 
-## Requirements
+---
 
-- Python 3.8+
-- OpenCV (cv2)
-- MediaPipe
-- NumPy
-- FilterPy
-- PySide6
-- Matplotlib
-- SciPy
-
-## Installation
+### Installation {#installation-python}
 
 1. Clone the repository:
-```bash
-git clone https://github.com/juliorodrigo23/motion-tracking-system.git
-cd motion-tracking-system
-```
+   ```bash
+   git clone https://github.com/Juliorodrigo23/motion-tracking-system
+   cd motion-tracking-system/Python_version
+   ```
 
-2. Create and activate a virtual environment (recommended):
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+2. Set up a virtual environment (recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
 
-3. Install required packages:
-```bash
-pip install -r requirements.txt
-```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Usage
+---
 
-Run the main application:
+### Usage {#usage-python}
+
+Run the main Python application:
+
 ```bash
 python main.py
 ```
 
-### Controls
-
+Controls:
 - **L**: Toggle left arm tracking
 - **R**: Toggle right arm tracking
-- **1**: Toggle left hand finger tracking
-- **2**: Toggle right hand finger tracking
+- **1/2**: Toggle finger tracking for left/right hands
 - **Q**: Quit application
 
-## System Architecture
+---
 
-### Key Components
+### Technical Details {#technical-details-python}
 
-1. **RobustArmTracker**: Main tracking system that coordinates:
-   - MediaPipe pose and hand detection
-   - Kalman filtering for joint tracking
-   - Gesture recognition
+#### Key Components
 
-2. **GestureRecognizer**: Processes hand landmarks to recognize:
-   - Finger states (extended/flexed)
-   - Wrist rotation (pronation/supination)
-   - Gesture confidence metrics
+1. **RobustArmTracker**: Coordinates MediaPipe, Kalman filtering, and gesture recognition.
+2. **GestureRecognizer**: Detects finger states, wrist rotations, and confidence metrics.
+3. **Visualizer**: Provides real-time visualization using Matplotlib and OpenCV.
 
-3. **Visualizer**: Provides real-time visualization including:
-   - 3D skeletal visualization
-   - Rotation tracking graphs
-   - Confidence metrics
-   - Augmented video feed
+#### Performance Optimization
 
-4. **AdvancedKalmanFilter**: Implements advanced state estimation for:
-   - Position tracking
-   - Velocity estimation
-   - Acceleration monitoring
+- Efficient Kalman filtering minimizes noise.
+- Real-time updates ensure smooth visualization.
 
-## Technical Details
-
-### Coordinate Systems
-
-The system uses multiple coordinate frames:
-- Camera frame: Raw MediaPipe coordinates
-- World frame: Natural coordinate system (forward, up, right)
-- Arm frame: Local coordinate system at wrist
-
-### Tracking Pipeline
-
-1. Frame Acquisition
-2. Pose Detection
-3. Hand Landmark Detection
-4. Joint Filtering
-5. Gesture Recognition
-6. Visualization Update
-
-### Performance Considerations
-
-- Efficient Kalman filtering for smooth tracking
-- Optimized visualization updates
-- Configurable confidence thresholds
+---
 
 ## Contributing
 
@@ -117,19 +258,18 @@ The system uses multiple coordinate frames:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+---
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+---
+
 ## Acknowledgments
 
-- MediaPipe team for their pose and hand tracking models
-- OpenCV community for computer vision tools
-- Qt team for the GUI framework
-- Contributors: Julio Contreras, Jake Gianotto, Changmin Yu, Maahin Rathinagiriswaran
-- Advisor: Jorge Ortiz
-
-## Contact
-
-Julio Contreras - [@juliooocon](https://www.linkedin.com/in/juliooocon/)
-Project Link: [https://github.com/juliorodrigo23/motion-tracking-system](https://github.com/juliorodrigo23/motion-tracking-system)
+- MediaPipe team for pose and hand tracking models.
+- OpenCV community for computer vision tools.
+- Nic Barker for the "Clay" UI library.
+- Contributors: Julio Contreras, Jake Gianotto, Changmin Yu, Maahin Rathinagiriswaran.
+- Advisor: Jorge Ortiz.

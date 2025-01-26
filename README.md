@@ -187,7 +187,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 
 ## Python Implementation
 
-![Python Implementation Demo](1x/OhPeak.png)
+![Python Implementation Demo](1x/DemoForPythonTracking.gif)
 
 ### Features 
 

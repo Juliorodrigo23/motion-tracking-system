@@ -10,21 +10,22 @@ A robust real-time motion tracking system using MediaPipe and OpenCV for trackin
 
 1. [Introduction](#introduction)
 2. [C++ Implementation](#c-implementation)
-    - [Features](#features-cpp)
-    - [Directory Structure](#directory-structure-cpp)
+    - [Features](#features)
+    - [Directory Structure](#directory-structure)
     - [Clay UI Integration](#clay-ui-integration)
-    - [Installation & Build Instructions](#installation--build-instructions-cpp)
-    - [Usage](#usage-cpp)
-    - [Technical Details](#technical-details-cpp)
-    - [Troubleshooting](#troubleshooting-cpp)
+    - [Installation & Build Instructions](#installation--build-instructions)
+    - [Usage](#usage)
+    - [Technical Details](#technical-details)
+    - [Troubleshooting](#troubleshooting)
 3. [Python Implementation](#python-implementation)
-    - [Features](#features-python)
-    - [Installation](#installation-python)
-    - [Usage](#usage-python)
-    - [Technical Details](#technical-details-python)
+    - [Features](#features-1)
+    - [Installation](#installation)
+    - [Usage](#usage-1)
+    - [Technical Details](#technical-details-1)
 4. [Contributing](#contributing)
 5. [License](#license)
 6. [Acknowledgments](#acknowledgments)
+
 
 ---
 
@@ -39,7 +40,7 @@ The **Advanced Motion Tracking System** uses cutting-edge computer vision techno
 
 ## C++ Implementation
 
-### Features {#features-cpp}
+### Features 
 
 - **Pose Tracking**: Uses MediaPipe’s pose detection to track arm and hand movements.
 - **OpenCV Integration**: Provides camera input, image processing, and real-time visualization.
@@ -49,7 +50,7 @@ The **Advanced Motion Tracking System** uses cutting-edge computer vision techno
 
 ---
 
-### Directory Structure {#directory-structure-cpp}
+### Directory Structure 
 
 ```
 C_with_key_bindings/
@@ -80,7 +81,7 @@ C_with_key_bindings/
 
 ---
 
-### Clay UI Integration {#clay-ui-integration}
+### Clay UI Integration 
 
 "Clay" is a high-performance 2D UI layout library designed for responsive and efficient layouts. Major features include:
 
@@ -100,7 +101,7 @@ For more details, visit the [Clay GitHub repository](https://github.com/nicbarke
 
 ---
 
-### Installation & Build Instructions {#installation--build-instructions-cpp}
+### Installation & Build Instructions 
 
 #### Prerequisites
 - **macOS with Apple Silicon**: The C++ implementation has been tested and configured specifically for macOS systems running on Apple Silicon.
@@ -139,7 +140,7 @@ For more details, visit the [Clay GitHub repository](https://github.com/nicbarke
 
 ---
 
-### Usage {#usage-cpp}
+### Usage
 
 The application performs pose detection using MediaPipe and visualizes the results with OpenCV. Key bindings are defined in `main.cpp`:
 
@@ -149,7 +150,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 
 ---
 
-### Technical Details {#technical-details-cpp}
+### Technical Details 
 
 #### Core Components
 
@@ -174,7 +175,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 
 ---
 
-### Troubleshooting {#troubleshooting-cpp}
+### Troubleshooting 
 
 - **Missing Python or PyBind11**: Verify Python paths in `CMakeLists.txt`.
 - **OpenCV Linking Errors**: Confirm the correct version of OpenCV is installed.
@@ -184,7 +185,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 
 ## Python Implementation
 
-### Features {#features-python}
+### Features 
 
 - **Dual Arm Tracking**: Tracks both arms and recognizes gestures.
 - **Hand Gesture Recognition**: Detects pronation, supination, and finger states.
@@ -198,7 +199,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 
 ---
 
-### Installation {#installation-python}
+### Installation 
 
 1. Clone the repository:
    ```bash
@@ -219,7 +220,7 @@ The application performs pose detection using MediaPipe and visualizes the resul
 
 ---
 
-### Usage {#usage-python}
+### Usage 
 
 Run the main Python application:
 
@@ -235,7 +236,7 @@ Controls:
 
 ---
 
-### Technical Details {#technical-details-python}
+### Technical Details 
 
 #### Key Components
 

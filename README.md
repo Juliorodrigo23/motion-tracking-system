@@ -1,6 +1,6 @@
 # Supro: An Advanced Motion Tracking System
 
-![Supro Logo](1x/Artboard%1.png)
+![Supro Logo](1x/Artboard%201.png)
 
 A robust real-time motion tracking system using MediaPipe and OpenCV for tracking arm movements, hand gestures, and pose estimation. The system features advanced Kalman filtering, 3D visualization, and a Clay (for C++ integration)/ Qt-based (for Python integration) GUI interface. This README covers both C++ and Python implementations, with detailed sections for each.
 

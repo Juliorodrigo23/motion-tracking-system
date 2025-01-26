@@ -274,5 +274,5 @@ This projects license is yet to be determined.
 - MediaPipe team for pose and hand tracking models.
 - OpenCV community for computer vision tools.
 - Nic Barker for the "Clay" UI library.
-- Contributors: Julio Contreras, Jake Gianotto, Changmin Yu, Maahin Rathinagiriswaran.
+- Contributors: Julio Contreras.
 - Advisor: Jorge Ortiz.

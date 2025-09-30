@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings
+CMAKE_SOURCE_DIR = "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build
+CMAKE_BINARY_DIR = "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/arm_tracker.dir/depend.make
@@ -73,60 +73,60 @@ CMakeFiles/arm_tracker.dir/codegen:
 .PHONY : CMakeFiles/arm_tracker.dir/codegen
 
 CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o: CMakeFiles/arm_tracker.dir/flags.make
-CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o: /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp
+CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o: /Users/JulioContreras/Desktop/School/Research/Baseball\ SuPro\ /motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp
 CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o: CMakeFiles/arm_tracker.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o -MF CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o -c /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o -MF CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.o -c "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp"
 
 CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp > CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp" > CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.i
 
 CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp -o CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/arm_tracker.cpp" -o CMakeFiles/arm_tracker.dir/src/arm_tracker.cpp.s
 
 CMakeFiles/arm_tracker.dir/src/main.cpp.o: CMakeFiles/arm_tracker.dir/flags.make
-CMakeFiles/arm_tracker.dir/src/main.cpp.o: /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/main.cpp
+CMakeFiles/arm_tracker.dir/src/main.cpp.o: /Users/JulioContreras/Desktop/School/Research/Baseball\ SuPro\ /motion-tracking-system/C_with_key_bindings/src/main.cpp
 CMakeFiles/arm_tracker.dir/src/main.cpp.o: CMakeFiles/arm_tracker.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/arm_tracker.dir/src/main.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/main.cpp.o -MF CMakeFiles/arm_tracker.dir/src/main.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/main.cpp.o -c /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/arm_tracker.dir/src/main.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/main.cpp.o -MF CMakeFiles/arm_tracker.dir/src/main.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/main.cpp.o -c "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/main.cpp"
 
 CMakeFiles/arm_tracker.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/arm_tracker.dir/src/main.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/main.cpp > CMakeFiles/arm_tracker.dir/src/main.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/main.cpp" > CMakeFiles/arm_tracker.dir/src/main.cpp.i
 
 CMakeFiles/arm_tracker.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/arm_tracker.dir/src/main.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/main.cpp -o CMakeFiles/arm_tracker.dir/src/main.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/main.cpp" -o CMakeFiles/arm_tracker.dir/src/main.cpp.s
 
 CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o: CMakeFiles/arm_tracker.dir/flags.make
-CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o: /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp
+CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o: /Users/JulioContreras/Desktop/School/Research/Baseball\ SuPro\ /motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp
 CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o: CMakeFiles/arm_tracker.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o -MF CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o -c /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o -MF CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.o -c "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp"
 
 CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp > CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp" > CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.i
 
 CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp -o CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/clay_ui_wrapper.cpp" -o CMakeFiles/arm_tracker.dir/src/clay_ui_wrapper.cpp.s
 
 CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o: CMakeFiles/arm_tracker.dir/flags.make
-CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o: /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp
+CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o: /Users/JulioContreras/Desktop/School/Research/Baseball\ SuPro\ /motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp
 CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o: CMakeFiles/arm_tracker.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o -MF CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o -c /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o -MF CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o.d -o CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.o -c "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp"
 
 CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp > CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.i
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp" > CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.i
 
 CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp -o CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.s
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/src/clay_impl.cpp" -o CMakeFiles/arm_tracker.dir/src/clay_impl.cpp.s
 
 # Object files for target arm_tracker
 arm_tracker_OBJECTS = \
@@ -202,7 +202,7 @@ arm_tracker: /opt/homebrew/lib/libopencv_photo.4.11.0.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_imgproc.4.11.0.dylib
 arm_tracker: /opt/homebrew/lib/libopencv_core.4.11.0.dylib
 arm_tracker: CMakeFiles/arm_tracker.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable arm_tracker"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable arm_tracker"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/arm_tracker.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -214,6 +214,6 @@ CMakeFiles/arm_tracker.dir/clean:
 .PHONY : CMakeFiles/arm_tracker.dir/clean
 
 CMakeFiles/arm_tracker.dir/depend:
-	cd /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build /Users/JulioContreras/Desktop/School/Research/Kinematics/motion-tracking-system/C_with_key_bindings/build/CMakeFiles/arm_tracker.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings" "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings" "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build" "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build" "/Users/JulioContreras/Desktop/School/Research/Baseball SuPro /motion-tracking-system/C_with_key_bindings/build/CMakeFiles/arm_tracker.dir/DependInfo.cmake" "--color=$(COLOR)"
 .PHONY : CMakeFiles/arm_tracker.dir/depend
 

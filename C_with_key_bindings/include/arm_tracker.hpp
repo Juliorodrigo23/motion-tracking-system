@@ -19,7 +19,7 @@ public:
         double angle;
         
         GestureState() : type("none"), confidence(0), angle(0) {}
-        GestureState(const std::string& t, double c, double a) 
+        GestureState(const std::string& t, double c, double a)
             : type(t), confidence(c), angle(a) {}
     };
 
@@ -29,12 +29,39 @@ public:
         double confidence;           // Detection confidence
         cv::Point2i pixelPos;       // 2D screen position
         std::unique_ptr<JointKalmanFilter> kalman;
-    
+   
         JointState() : confidence(0) {
             position = Eigen::Vector3d::Zero();
             velocity = Eigen::Vector3d::Zero();
             kalman = std::make_unique<JointKalmanFilter>();
         }
+        
+        // Copy constructor
+        JointState(const JointState& other) 
+            : position(other.position),
+              velocity(other.velocity),
+              confidence(other.confidence),
+              pixelPos(other.pixelPos) {
+            kalman = std::make_unique<JointKalmanFilter>(*other.kalman);
+        }
+        
+        // Copy assignment operator
+        JointState& operator=(const JointState& other) {
+            if (this != &other) {
+                position = other.position;
+                velocity = other.velocity;
+                confidence = other.confidence;
+                pixelPos = other.pixelPos;
+                kalman = std::make_unique<JointKalmanFilter>(*other.kalman);
+            }
+            return *this;
+        }
+        
+        // Move constructor
+        JointState(JointState&&) = default;
+        
+        // Move assignment operator
+        JointState& operator=(JointState&&) = default;
     };
 
     struct HandState {

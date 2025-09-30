@@ -1,3 +1,4 @@
+// kalman_filter.hpp
 #pragma once
 #include <Eigen/Dense>
 
@@ -25,6 +26,24 @@ public:
         
         // Initial state
         x = Eigen::VectorXd::Zero(6);
+    }
+    
+    // Copy constructor
+    JointKalmanFilter(const JointKalmanFilter& other) 
+        : A(other.A), H(other.H), Q(other.Q), R(other.R), P(other.P), x(other.x) {
+    }
+    
+    // Copy assignment operator
+    JointKalmanFilter& operator=(const JointKalmanFilter& other) {
+        if (this != &other) {
+            A = other.A;
+            H = other.H;
+            Q = other.Q;
+            R = other.R;
+            P = other.P;
+            x = other.x;
+        }
+        return *this;
     }
     
     void predict() {
